@@ -17,6 +17,15 @@ import NeonButton from '../Components/UI/NeonButton.js';
 
 const SOCIAL_SERVICES = [
   { 
+    id: 'nexus-discord', 
+    name: 'Nexus Discord Server', 
+    color: '#00f0ff',
+    icon: '💎',
+    description: 'Join the official Nexus community',
+    url: 'https://discord.gg/qz4gdJttay',
+    connected: true
+  },
+  { 
     id: 'discord', 
     name: 'Discord', 
     color: '#5865f2',

@@ -17,7 +17,7 @@ import {
   Bell,
   AlertTriangle
 } from 'lucide-react';
-import DashboardTile from '../Components/Dashboard/DashboardTile';
+import DashboardTile from '../Components/Dashboard/DashboardTile.js';
 import QuickActions from '../Components/Dashboard/QuickActions';
 import GlassCard from '../Components/UI/GlassCard';
 import { storage, session } from '../Components/Storage/clientStorage.js';
