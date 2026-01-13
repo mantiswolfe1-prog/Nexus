@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Shield, Users, Key, Ban, AlertTriangle, LogOut, Trash2, Activity, Cpu } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from 'utils';
-import { session } from '../Components/Storage/clientStorage';
+import { session } from '../Components/Storage/clientStorage.js';
 import GlassCard from '../Components/UI/GlassCard';
 import NeonButton from '../Components/UI/NeonButton';
 import AnimatedBackground from '../Components/UI/AnimatedBackground';

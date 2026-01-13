@@ -20,7 +20,7 @@ import {
 import DashboardTile from '../Components/Dashboard/DashboardTile';
 import QuickActions from '../Components/Dashboard/QuickActions';
 import GlassCard from '../Components/UI/GlassCard';
-import { storage, session } from '../Components/Storage/clientStorage';
+import { storage, session } from '../Components/Storage/clientStorage.js';
 import SoftParticleDrift from '../Components/Backgrounds/SoftParticleDrift';
 import FPSMonitor from '../Components/Performance/FPSMonitor';
 import { PerformanceProvider, usePerformance } from '../Components/Performance/PerformanceManager';

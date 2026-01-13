@@ -7,7 +7,7 @@ import GlassCard from '../Components/UI/GlassCard';
 import NeonButton from '../Components/UI/NeonButton';
 import GameCard from '../Components/Games/GameCard';
 import GameFilters from '../Components/Games/GameFilters';
-import { storage } from '../Components/Storage/clientStorage';
+import { storage } from '../Components/Storage/clientStorage.js';
 import SoftParticleDrift from '../Components/Backgrounds/SoftParticleDrift';
 
 const SAMPLE_GAMES = [
