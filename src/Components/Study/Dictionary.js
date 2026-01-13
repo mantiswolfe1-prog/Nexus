@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
-import GlassCard from '../../UI/GlassCard';
-import { Input } from '../../UI/input';
-import NeonButton from '../../UI/NeonButton';
+import GlassCard from '../UI/GlassCard.js';
+import { Input } from '../UI/input.js';
+import NeonButton from '../UI/NeonButton.js';
 
 // Simple local dictionary data
 const DICTIONARY_DATA = {
@@ -90,25 +90,6 @@ export default function Dictionary({ accentColor }) {
           <p>{result.error}</p>
           <p className="text-sm mt-2">Try: hello, world, computer, study, nexus</p>
         </div>
-      )}
-    </GlassCard>
-  );
-}
-          {result.meanings?.map((meaning, i) => (
-            <div key={i} className="p-4 rounded-xl bg-white/5">
-              <p className="text-sm font-medium text-white/70 mb-2">{meaning.partOfSpeech}</p>
-              <ul className="space-y-2">
-                {meaning.definitions.slice(0, 3).map((def, j) => (
-                  <li key={j} className="text-white/90">{def.definition}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {result?.error && (
-        <p className="text-red-400 text-center">{result.error}</p>
       )}
     </GlassCard>
   );
