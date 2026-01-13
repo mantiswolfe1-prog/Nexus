@@ -4,7 +4,7 @@ import { Shield, Users, Key, Ban, AlertTriangle, LogOut, Trash2, Activity, Cpu }
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from 'utils';
 import { session } from '../Components/Storage/clientStorage.js';
-import GlassCard from '../Components/UI/GlassCard';
+import GlassCard from '../Components/UI/GlassCard.js';
 import NeonButton from '../Components/UI/NeonButton.js';
 import AnimatedBackground from '../Components/UI/AnimatedBackground';
 

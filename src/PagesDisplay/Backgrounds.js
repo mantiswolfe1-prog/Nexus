@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Sparkles, Circle, Grid, Image as ImageIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from 'utils';
-import GlassCard from '../Components/UI/GlassCard';
+import GlassCard from '../Components/UI/GlassCard.js';
 import NeonButton from '../Components/UI/NeonButton.js';
 import { Slider } from '../Components/UI/slider';
 import { Label } from '../Components/UI/label';

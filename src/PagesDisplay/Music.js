@@ -4,7 +4,7 @@ import { ArrowLeft, Music as MusicIcon, Radio, Disc, Heart, Clock, ExternalLink 
 import { Link } from 'react-router-dom';
 import { createPageUrl } from 'utils';
 import AnimatedBackground from '../Components/UI/AnimatedBackground';
-import GlassCard from '../Components/UI/GlassCard';
+import GlassCard from '../Components/UI/GlassCard.js';
 import NeonButton from '../Components/UI/NeonButton.js';
 import MusicPlayer from '../Components/Music/MusicPlayer';
 

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Shield, Lock, Server, HardDrive } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from 'utils';
-import GlassCard from '../Components/UI/GlassCard';
+import GlassCard from '../Components/UI/GlassCard.js';
 import NeonButton from '../Components/UI/NeonButton.js';
 
 export default function Privacy() {

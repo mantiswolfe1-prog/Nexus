@@ -15,7 +15,7 @@ import {
 import { Link } from 'react-router-dom';
 import { createPageUrl } from 'utils';
 import AnimatedBackground from '../Components/UI/AnimatedBackground';
-import GlassCard from '../Components/UI/GlassCard';
+import GlassCard from '../Components/UI/GlassCard.js';
 import NeonButton from '../Components/UI/NeonButton.js';
 import BrowserTab from '../Components/Browser/BrowserTab';
 import { Input } from '../Components/UI/input';

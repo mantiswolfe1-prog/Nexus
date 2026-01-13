@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import DashboardTile from '../Components/Dashboard/DashboardTile.js';
 import QuickActions from '../Components/Dashboard/QuickActions';
-import GlassCard from '../Components/UI/GlassCard';
+import GlassCard from '../Components/UI/GlassCard.js';
 import { storage, session } from '../Components/Storage/clientStorage.js';
 import SoftParticleDrift from '../Components/Backgrounds/SoftParticleDrift';
 import FPSMonitor from '../Components/Performance/FPSMonitor';
