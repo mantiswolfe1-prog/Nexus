@@ -98,6 +98,27 @@ export const storage = {
       request.onerror = () => reject(request.error);
     });
   },
+
+  // Invite code management
+  getInviteCode() {
+    const code = localStorage.getItem('nexus_invite_code');
+    if (!code) {
+      // Generate initial code
+      const newCode = this.regenerateInviteCode();
+      return newCode;
+    }
+    return code;
+  },
+
+  regenerateInviteCode() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code = '';
+    for (let i = 0; i < 8; i++) {
+      code += chars[Math.floor(Math.random() * chars.length)];
+    }
+    localStorage.setItem('nexus_invite_code', code);
+    return code;
+  },
   
   async saveSettings(settings) {
     const db = await initDB();

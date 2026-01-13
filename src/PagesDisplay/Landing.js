@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Download, ArrowRight } from 'lucide-react';
+import { Shield, Download, ArrowRight, MessageCircle, Bug } from 'lucide-react';
 import NeonButton from '../Components/UI/NeonButton.js';
 import { useNavigate } from 'react-router-dom';
-import { createPageUrl } from '../utils';
+import { createPageUrl } from '../utils.js';
 
 export default function Landing() {
   const [loading, setLoading] = useState(false);
@@ -95,6 +95,27 @@ export default function Landing() {
             <Shield className="w-3 h-3" />
             Privacy & Security
           </a>
+          <div className="mt-4 flex items-center justify-center gap-4">
+            <a
+              href="https://discord.gg/nexushub"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/40 hover:text-cyan-400 text-xs transition-colors inline-flex items-center gap-2"
+            >
+              <MessageCircle className="w-3 h-3" />
+              Need help?
+            </a>
+            <span className="text-white/20">•</span>
+            <a
+              href="https://discord.gg/nexushub"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/40 hover:text-cyan-400 text-xs transition-colors inline-flex items-center gap-2"
+            >
+              <Bug className="w-3 h-3" />
+              Report a bug
+            </a>
+          </div>
         </motion.div>
       </motion.div>
     </div>

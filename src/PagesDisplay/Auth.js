@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Key, AlertCircle, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { createPageUrl } from '../utils';
+import { createPageUrl } from '../utils.js';
 import { storage, session } from '../Components/Storage/clientStorage.js';
 import NeonButton from '../Components/UI/NeonButton.js';
 import { Input } from '../Components/UI/input.js';
@@ -14,22 +14,13 @@ export default function Auth() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const ADMIN_CODE = '0915';
+  const ADMIN_CODES = ['0915', '091587'];
 
   useEffect(() => {
     if (!sessionStorage.getItem('nexus_consent_accepted')) {
       navigate(createPageUrl('Landing'));
     }
   }, [navigate]);
-
-  const generateRandomCode = () => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let code = '';
-    for (let i = 0; i < 8; i++) {
-      code += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    setAccessCode(code);
-  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -52,8 +43,8 @@ export default function Auth() {
       }
 
       // Admin login - skip storage check
-      if (code === ADMIN_CODE) {
-        session.set(ADMIN_CODE, remember, true);
+      if (ADMIN_CODES.includes(code)) {
+        session.set(code, remember, true);
         navigate(createPageUrl('AdminDashboard'));
         return;
       }
@@ -67,7 +58,16 @@ export default function Auth() {
         session.set(code, remember, false);
         navigate(createPageUrl('Dashboard'));
       } else {
-        // New user - auto-create account with this access code
+        // New user - check if code matches current invite code
+        const currentInviteCode = storage.getInviteCode();
+        
+        if (code !== currentInviteCode) {
+          setError('Invalid access code. Please ask the admin for the current code.');
+          setLoading(false);
+          return;
+        }
+        
+        // Valid invite code - create account and regenerate
         const username = `Nexus_${code.slice(0, 4).toUpperCase()}`;
         await storage.saveUser(username, code);
         
@@ -80,6 +80,9 @@ export default function Auth() {
           aiTools: { enabled: false, autoSuggest: true },
           lowEndMode: false
         });
+
+        // Regenerate invite code for next user
+        storage.regenerateInviteCode();
 
         session.set(code, remember, false);
         navigate(createPageUrl('Dashboard'));
@@ -129,15 +132,8 @@ export default function Auth() {
                 disabled={loading}
               />
               <p className="text-xs text-white/40 mt-2 text-center">
-                New? Just enter any code to create your account.
+                New? Ask the admin for the current invite code.
               </p>
-              <button
-                type="button"
-                onClick={generateRandomCode}
-                className="w-full mt-2 text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
-              >
-                ✨ Generate random code for me
-              </button>
             </div>
 
             <label className="flex items-center justify-center gap-2 text-sm text-white/60 cursor-pointer">

@@ -47,6 +47,7 @@ export default function Settings() {
   ]);
   const [activeProfile, setActiveProfile] = useState('default');
   const [accessCode, setAccessCode] = useState('');
+  const [inviteCode, setInviteCode] = useState('');
   const [regenerateCooldown, setRegenerateCooldown] = useState(0);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -72,6 +73,12 @@ export default function Settings() {
 
       setIsAdmin(session.isAdmin());
       setAccessCode(accountCode);
+      
+      // Load invite code if admin
+      if (session.isAdmin()) {
+        const code = storage.getInviteCode();
+        setInviteCode(code);
+      }
 
       await storage.init();
       const userData = await storage.loadUser(accountCode);
@@ -139,32 +146,16 @@ export default function Settings() {
     navigate(createPageUrl('Landing'));
   };
 
-  const regenerateAccessCode = async () => {
+  const regenerateInviteCode = () => {
     if (regenerateCooldown > 0) return;
     
-    if (!confirm('Generate a new access code? Your old code will no longer work!')) return;
+    if (!confirm('Generate a new invite code? The old one will no longer work for new users!')) return;
     
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let code = '';
-    for (let i = 0; i < 8; i++) {
-      code += chars[Math.floor(Math.random() * chars.length)];
-    }
+    const newCode = storage.regenerateInviteCode();
+    setInviteCode(newCode);
+    setRegenerateCooldown(10);
     
-    // Update the access code in storage
-    if (user) {
-      const updatedUser = { ...user, accessCode: code };
-      await storage.saveUser(code, updatedUser);
-      // Delete old user data
-      if (accessCode !== code) {
-        localStorage.removeItem(`nexus_user_${accessCode}`);
-      }
-    }
-    
-    session.set(code, isAdmin);
-    setAccessCode(code);
-    setRegenerateCooldown(60);
-    
-    alert(`New access code: ${code}\n\nSave this somewhere safe! Your old code will no longer work.`);
+    alert(`New invite code: ${newCode}\n\nShare this with new users. It will auto-regenerate after someone uses it.`);
   };
 
   const createProfile = (name) => {
@@ -199,40 +190,61 @@ export default function Settings() {
         keywords: ['account', 'access', 'code', 'login', 'regenerate'],
         custom: (
           <div className="space-y-4">
-            <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-              <h4 className="text-white font-medium mb-2">Your Access Code</h4>
-              <div className="flex items-center gap-3">
-                <div className="flex-1 p-3 rounded-lg bg-black/30 font-mono text-cyan-400 text-lg text-center tracking-wider">
-                  {accessCode}
+            {isAdmin ? (
+              <>
+                <div className="p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+                  <h4 className="text-cyan-400 font-medium mb-2">Current Invite Code</h4>
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 p-3 rounded-lg bg-black/30 font-mono text-cyan-400 text-xl text-center tracking-wider font-bold">
+                      {inviteCode}
+                    </div>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(inviteCode);
+                        alert('Invite code copied!');
+                      }}
+                      className="px-4 py-2 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 transition-colors text-sm font-medium"
+                    >
+                      Copy
+                    </button>
+                  </div>
+                  <p className="text-xs text-white/60 mt-2">
+                    Share this code with new users. It will auto-regenerate after someone uses it.
+                  </p>
                 </div>
-                <button
-                  onClick={() => navigator.clipboard.writeText(accessCode)}
-                  className="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors text-sm"
-                >
-                  Copy
-                </button>
+                <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                  <h4 className="text-white font-medium mb-2">Manual Regenerate</h4>
+                  <p className="text-white/60 text-sm mb-3">
+                    Generate a new invite code (old one will no longer work).
+                  </p>
+                  <NeonButton
+                    onClick={regenerateInviteCode}
+                    disabled={regenerateCooldown > 0}
+                    className="w-full"
+                  >
+                    {regenerateCooldown > 0 ? `Wait ${regenerateCooldown}s` : 'Regenerate Invite Code'}
+                  </NeonButton>
+                </div>
+              </>
+            ) : (
+              <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                <h4 className="text-white font-medium mb-2">Your Access Code</h4>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 p-3 rounded-lg bg-black/30 font-mono text-cyan-400 text-lg text-center tracking-wider">
+                    {accessCode}
+                  </div>
+                  <button
+                    onClick={() => navigator.clipboard.writeText(accessCode)}
+                    className="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors text-sm"
+                  >
+                    Copy
+                  </button>
+                </div>
+                <p className="text-xs text-white/40 mt-2">
+                  This is your login code. Save it somewhere safe!
+                </p>
               </div>
-              <p className="text-xs text-white/40 mt-2">
-                This is your login code. Save it somewhere safe!
-              </p>
-            </div>
-            <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
-              <h4 className="text-amber-400 font-medium mb-2 flex items-center gap-2">
-                <AlertCircle className="w-4 h-4" />
-                Regenerate Access Code
-              </h4>
-              <p className="text-white/60 text-sm mb-3">
-                Generate a new random code. Your old code will stop working.
-              </p>
-              <NeonButton
-                onClick={regenerateAccessCode}
-                variant="danger"
-                disabled={regenerateCooldown > 0}
-                className="w-full"
-              >
-                {regenerateCooldown > 0 ? `Wait ${regenerateCooldown}s` : 'Regenerate Code'}
-              </NeonButton>
-            </div>
+            )}
           </div>
         )
       },
