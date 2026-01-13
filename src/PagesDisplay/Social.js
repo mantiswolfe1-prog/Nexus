@@ -10,10 +10,10 @@ import {
   X as CloseIcon
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
-import AnimatedBackground from '@/components/ui/AnimatedBackground';
-import GlassCard from '@/components/ui/GlassCard';
-import NeonButton from '@/components/ui/NeonButton';
+import { createPageUrl } from 'utils';
+import AnimatedBackground from 'components/ui/AnimatedBackground';
+import GlassCard from 'components/ui/GlassCard';
+import NeonButton from 'components/ui/NeonButton';
 
 const SOCIAL_SERVICES = [
   { 

@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Sparkles, Circle, Grid, Image as ImageIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
-import GlassCard from '@/components/ui/GlassCard';
-import NeonButton from '@/components/ui/NeonButton';
-import { Slider } from '@/components/ui/slider';
-import { Label } from '@/components/ui/label';
-import SoftParticleDrift from '@/components/backgrounds/SoftParticleDrift';
+import { createPageUrl } from 'utils';
+import GlassCard from 'components/ui/GlassCard';
+import NeonButton from 'components/ui/NeonButton';
+import { Slider } from 'components/ui/slider';
+import { Label } from 'components/ui/label';
+import SoftParticleDrift from 'components/backgrounds/SoftParticleDrift';
 
 const BACKGROUNDS = [
   {

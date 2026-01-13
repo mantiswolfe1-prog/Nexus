@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Star, Clock, TrendingUp, Shuffle, Tag } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
-import GlassCard from '@/components/ui/GlassCard';
-import NeonButton from '@/components/ui/NeonButton';
-import GameCard from '@/components/games/GameCard';
-import GameFilters from '@/components/games/GameFilters';
-import { storage } from '@/components/storage/clientStorage';
-import SoftParticleDrift from '@/components/backgrounds/SoftParticleDrift';
+import { createPageUrl } from 'utils';
+import GlassCard from 'components/ui/GlassCard';
+import NeonButton from 'components/ui/NeonButton';
+import GameCard from 'components/games/GameCard';
+import GameFilters from 'components/games/GameFilters';
+import { storage } from 'components/storage/clientStorage';
+import SoftParticleDrift from 'components/backgrounds/SoftParticleDrift';
 
 const SAMPLE_GAMES = [
   { 

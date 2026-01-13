@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Users, Key, Ban, AlertTriangle, LogOut, Trash2, Activity, Cpu } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
-import { base44 } from '@/api/base44Client';
-import { session } from '@/components/storage/clientStorage';
-import GlassCard from '@/components/ui/GlassCard';
-import NeonButton from '@/components/ui/NeonButton';
-import AnimatedBackground from '@/components/ui/AnimatedBackground';
+import { createPageUrl } from 'utils';
+import { session } from 'components/storage/clientStorage';
+import GlassCard from 'components/ui/GlassCard';
+import NeonButton from 'components/ui/NeonButton';
+import AnimatedBackground from 'components/ui/AnimatedBackground';
 
 export default function AdminDashboard() {
   const [accessCodes, setAccessCodes] = useState([]);
@@ -28,14 +27,10 @@ export default function AdminDashboard() {
 
   const loadAdminData = async () => {
     try {
-      const [codes, bans, globalNotices] = await Promise.all([
-        base44.entities.AccessCode.list(),
-        base44.entities.BanList.list(),
-        base44.entities.GlobalNotice.list()
-      ]);
-      setAccessCodes(codes);
-      setBanList(bans);
-      setNotices(globalNotices);
+      // Mock data - base44 removed
+      setAccessCodes([]);
+      setBanList([]);
+      setNotices([]);
     } catch (err) {
       console.error('Failed to load admin data:', err);
     } finally {
@@ -52,8 +47,8 @@ export default function AdminDashboard() {
   const banAccessCode = async (code) => {
     if (!confirm(`Ban access code ${code}?`)) return;
     try {
-      await base44.entities.BanList.create({ identifier: code, reason: 'Admin banned', bannedAt: new Date().toISOString() });
-      loadAdminData();
+      // Mock ban - base44 removed
+      console.log('Ban code:', code);
     } catch (err) {
       console.error('Failed to ban code:', err);
     }
@@ -61,8 +56,8 @@ export default function AdminDashboard() {
 
   const unbanCode = async (id) => {
     try {
-      await base44.entities.BanList.delete(id);
-      loadAdminData();
+      // Mock unban - base44 removed
+      console.log('Unban id:', id);
     } catch (err) {
       console.error('Failed to unban:', err);
     }

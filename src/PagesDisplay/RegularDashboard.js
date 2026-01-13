@@ -18,13 +18,12 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import DashboardTile from '../Components/Dashboard/DashboardTile';
-import QuickActions from '@/components/dashboard/QuickActions';
-import GlassCard from '@/components/ui/GlassCard';
-import { storage, session } from '@/components/storage/clientStorage';
-import { base44 } from '@/api/base44Client';
-import SoftParticleDrift from '@/components/backgrounds/SoftParticleDrift';
-import FPSMonitor from '@/components/performance/FPSMonitor';
-import { PerformanceProvider, usePerformance } from '@/components/performance/PerformanceManager';
+import QuickActions from 'components/dashboard/QuickActions';
+import GlassCard from 'components/ui/GlassCard';
+import { storage, session } from 'components/storage/clientStorage';
+import SoftParticleDrift from 'components/backgrounds/SoftParticleDrift';
+import FPSMonitor from 'components/performance/FPSMonitor';
+import { PerformanceProvider, usePerformance } from 'components/performance/PerformanceManager';
 
 function DashboardContent() {
   const [user, setUser] = useState(null);
@@ -88,8 +87,8 @@ function DashboardContent() {
 
   const loadGlobalNotices = async () => {
     try {
-      const notices = await base44.entities.GlobalNotice.filter({ isActive: true });
-      setGlobalNotices(notices.slice(0, 3));
+      // Mock notices - base44 removed
+      setGlobalNotices([]);
     } catch (err) {
       console.error('Failed to load notices:', err);
     }

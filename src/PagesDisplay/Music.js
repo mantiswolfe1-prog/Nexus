@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Music as MusicIcon, Radio, Disc, Heart, Clock, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
-import AnimatedBackground from '@/components/ui/AnimatedBackground';
-import GlassCard from '@/components/ui/GlassCard';
-import NeonButton from '@/components/ui/NeonButton';
-import MusicPlayer from '@/components/music/MusicPlayer';
+import { createPageUrl } from 'utils';
+import AnimatedBackground from 'components/ui/AnimatedBackground';
+import GlassCard from 'components/ui/GlassCard';
+import NeonButton from 'components/ui/NeonButton';
+import MusicPlayer from 'components/music/MusicPlayer';
 
 const MUSIC_SERVICES = [
   { 
