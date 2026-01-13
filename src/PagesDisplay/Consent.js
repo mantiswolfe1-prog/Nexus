@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { AlertCircle, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { createPageUrl } from '../../utils';
+import { createPageUrl } from '../utils';
 import NeonButton from '../../Components/UI/NeonButton';
 
 export default function Consent() {

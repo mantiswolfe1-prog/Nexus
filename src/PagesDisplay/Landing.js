@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Shield, Download, ArrowRight } from 'lucide-react';
 import NeonButton from '../../Components/UI/NeonButton';
 import { useNavigate } from 'react-router-dom';
-import { createPageUrl } from '../../utils';
+import { createPageUrl } from '../utils';
 
 export default function Landing() {
   const [loading, setLoading] = useState(false);

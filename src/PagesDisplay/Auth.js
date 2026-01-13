@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Key, AlertCircle, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { createPageUrl } from '../../utils';
+import { createPageUrl } from '../utils';
 import { storage, session } from '../../Components/Storage/clientStorage';
 import NeonButton from '../../Components/UI/NeonButton';
 import { Input } from '../../Components/UI/input';
