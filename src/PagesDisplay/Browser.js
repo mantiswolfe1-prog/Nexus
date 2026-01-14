@@ -294,40 +294,48 @@ export default function Browser() {
                       </div>
                     </div>
                   ) : iframeError ? (
-                    <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-[#f5f5f5]">
                       <motion.div 
-                        className="text-center p-8 max-w-md"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
+                        className="text-left p-6 sm:p-8 max-w-lg w-full bg-white border border-gray-200 shadow-md rounded-md"
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
                       >
-                        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/20 flex items-center justify-center">
-                          <X className="w-8 h-8 text-red-400" />
-                        </div>
-                        <h3 className="text-xl font-bold text-white mb-2">Can't Display This Site</h3>
-                        <p className="text-white/70 mb-2">{lastRequestedUrl || activeTab.title}</p>
-                        <p className="text-sm text-white/50 mb-6">
-                          Opening this site here isn't supported. You can open it directly or go back.
-                        </p>
-                        <div className="space-y-2">
-                          <NeonButton
-                            onClick={() => window.open(activeTab.url, '_blank', 'noopener,noreferrer')}
-                            className="gap-2 w-full"
-                          >
-                            <Globe className="w-4 h-4" />
-                            Open in New Tab
-                          </NeonButton>
-                          <button
-                            onClick={() => {
-                              setIframeError(false);
-                              setTabs(prev => prev.map(t => 
-                                t.id === activeTabId ? { ...t, url: '', title: 'New Tab' } : t
-                              ));
-                              setUrlInput('');
-                            }}
-                            className="w-full px-4 py-2 text-sm text-white/60 hover:text-white/90 transition-colors"
-                          >
-                            Go back
-                          </button>
+                        <div className="flex items-start gap-4">
+                          <div className="w-16 h-16 flex items-center justify-center">
+                            <svg viewBox="0 0 64 64" className="w-14 h-14 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2">
+                              <rect x="14" y="12" width="36" height="32" rx="4" ry="4" />
+                              <circle cx="24" cy="30" r="2" />
+                              <circle cx="40" cy="30" r="2" />
+                              <path d="M22 42c4 4 16 4 20 0" />
+                              <path d="M18 12l-4-6" />
+                              <path d="M46 12l4-6" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-semibold text-gray-800 mb-1">404. That’s an error.</h3>
+                            <p className="text-sm text-gray-600 mb-2">The requested URL <span className="break-all">{lastRequestedUrl || activeTab.title}</span> could not be displayed here.</p>
+                            <p className="text-sm text-gray-600 mb-4">That’s all we know.</p>
+                            <div className="flex flex-wrap gap-2">
+                              <button
+                                onClick={() => window.open(activeTab.url, '_blank', 'noopener,noreferrer')}
+                                className="px-4 py-2 bg-[#1a73e8] text-white rounded shadow hover:bg-[#1664c4] transition-colors"
+                              >
+                                Open in new tab
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setIframeError(false);
+                                  setTabs(prev => prev.map(t => 
+                                    t.id === activeTabId ? { ...t, url: '', title: 'New Tab' } : t
+                                  ));
+                                  setUrlInput('');
+                                }}
+                                className="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+                              >
+                                Go back
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       </motion.div>
                     </div>
