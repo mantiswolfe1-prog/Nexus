@@ -152,7 +152,7 @@ export default function Browser() {
           ? { ...t, loading: false }
           : t
       ));
-    }, 1000);
+    }, 1500);
   };
 
   const handleSubmit = (e) => {
@@ -348,15 +348,29 @@ export default function Browser() {
                       </motion.div>
                     </div>
                   ) : (
-                    <>
+                    <div className="relative w-full h-full">
                       <iframe
                         src={activeTab.url}
                         className="w-full h-full border-0"
                         title={activeTab.title}
                         sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation"
                         referrerPolicy="no-referrer"
+                        onError={() => setIframeError(true)}
                       />
-                    </>
+                      {/* Overlay hint for sites that might be blocked */}
+                      <div className="absolute top-0 right-0 z-40 p-4">
+                        <motion.button
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 2 }}
+                          onClick={() => window.open(activeTab.url, '_blank', 'noopener,noreferrer')}
+                          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium shadow-lg"
+                          title="Open in external browser (some sites block iframe embedding)"
+                        >
+                          Open Externally ↗
+                        </motion.button>
+                      </div>
+                    </div>
                   )}
                 </div>
             ) : (
