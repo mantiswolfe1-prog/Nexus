@@ -73,7 +73,7 @@ export default function DiscordVerification({ role, onVerify }) {
           <div>
             <h4 className={`font-medium ${badge.color}`}>Current Role: {badge.label}</h4>
             <p className="text-xs text-white/60 mt-1">
-              {role === 'guest' && 'Limited access to basic features'}
+              {role === 'guest' && 'Demo mode - Explore what Nexus has to offer!'}
               {role === 'verified' && 'Full access to all user features'}
               {role === 'admin' && 'Administrative privileges'}
               {role === 'owner' && 'Full system control'}
@@ -91,7 +91,7 @@ export default function DiscordVerification({ role, onVerify }) {
         >
           <h4 className="text-white font-medium mb-2">Verify with Discord</h4>
           <p className="text-white/60 text-sm mb-4">
-            Join our Discord server and verify your membership to unlock premium features, exclusive games, and more!
+            Love what you see? Join our Discord community and verify to unlock your personal account with saves, premium games, and exclusive features!
           </p>
 
           <div className="space-y-3">
@@ -159,7 +159,14 @@ export default function DiscordVerification({ role, onVerify }) {
 
       {/* Feature Access Info */}
       <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-        <h4 className="text-white font-medium mb-3">Feature Access</h4>
+        <h4 className="text-white font-medium mb-3">
+          {role === 'guest' ? 'What You Can Try' : 'Your Access'}
+        </h4>
+        {role === 'guest' && (
+          <p className="text-xs text-white/50 mb-3">
+            Guest mode lets you explore Nexus features. Verify to save progress and unlock everything!
+          </p>
+        )}
         <div className="space-y-2 text-sm">
           <div className="flex items-center gap-2">
             <Check className="w-4 h-4 text-green-400" />
@@ -171,23 +178,31 @@ export default function DiscordVerification({ role, onVerify }) {
           </div>
           <div className="flex items-center gap-2">
             <Check className="w-4 h-4 text-green-400" />
-            <span className="text-white/70">Basic Games (Limited)</span>
+            <span className="text-white/70">Games Demo</span>
           </div>
           <div className="flex items-center gap-2">
             <Check className="w-4 h-4 text-green-400" />
             <span className="text-white/70">Study Tools</span>
           </div>
-          <div className={`flex items-center gap-2 ${role === 'guest' ? 'opacity-50' : ''}`}>
-            {role === 'guest' ? <X className="w-4 h-4 text-red-400" /> : <Check className="w-4 h-4 text-green-400" />}
-            <span className="text-white/70">Premium Games Library</span>
+          <div className="flex items-center gap-2">
+            <Check className="w-4 h-4 text-green-400" />
+            <span className="text-white/70">Browse All Features</span>
+          </div>
+          <div className={`flex items-center gap-2 mt-3 pt-3 border-t border-white/10 ${role === 'guest' ? 'opacity-50' : ''}`}>
+            {role === 'guest' ? <X className="w-4 h-4 text-orange-400" /> : <Check className="w-4 h-4 text-green-400" />}
+            <span className="text-white/70">Save Progress & Settings</span>
           </div>
           <div className={`flex items-center gap-2 ${role === 'guest' ? 'opacity-50' : ''}`}>
-            {role === 'guest' ? <X className="w-4 h-4 text-red-400" /> : <Check className="w-4 h-4 text-green-400" />}
-            <span className="text-white/70">Social Features</span>
+            {role === 'guest' ? <X className="w-4 h-4 text-orange-400" /> : <Check className="w-4 h-4 text-green-400" />}
+            <span className="text-white/70">Full Games Library</span>
           </div>
           <div className={`flex items-center gap-2 ${role === 'guest' ? 'opacity-50' : ''}`}>
-            {role === 'guest' ? <X className="w-4 h-4 text-red-400" /> : <Check className="w-4 h-4 text-green-400" />}
-            <span className="text-white/70">Cloud Sync & Backups</span>
+            {role === 'guest' ? <X className="w-4 h-4 text-orange-400" /> : <Check className="w-4 h-4 text-green-400" />}
+            <span className="text-white/70">Social Features & Chat</span>
+          </div>
+          <div className={`flex items-center gap-2 ${role === 'guest' ? 'opacity-50' : ''}`}>
+            {role === 'guest' ? <X className="w-4 h-4 text-orange-400" /> : <Check className="w-4 h-4 text-green-400" />}
+            <span className="text-white/70">Premium Study Resources</span>
           </div>
         </div>
       </div>

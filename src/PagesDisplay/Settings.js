@@ -230,14 +230,15 @@ export default function Settings() {
               {userRole === 'verified' && (
                 <div className="space-y-2">
                   <p className="text-white/60 text-sm mb-3">
-                    Want admin privileges? Contact the owner for an admin code.
+                    Enjoying Nexus? You already have full access to all features!
                   </p>
-                  <div className="p-3 rounded-lg bg-black/20 border border-white/10">
-                    <p className="text-white/70 text-sm">
-                      <strong>Admin Code:</strong> <span className="font-mono text-cyan-400">ADMIN-NEXUS</span>
+                  <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20">
+                    <p className="text-green-400 text-sm flex items-center gap-2">
+                      <Check className="w-4 h-4" />
+                      <strong>Verified User</strong> - Complete access unlocked
                     </p>
                     <p className="text-xs text-white/40 mt-1">
-                      You must be an admin on the Discord server to use this code.
+                      You have access to all games, features, and tools. Thanks for being part of Nexus!
                     </p>
                   </div>
                 </div>
