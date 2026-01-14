@@ -50,6 +50,18 @@ function DashboardContent() {
     loadGlobalNotices();
   }, []);
 
+  // Keyboard shortcut to toggle FPS monitor (Ctrl+Shift+F)
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'f') {
+        e.preventDefault();
+        setShowFPS(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
+
   const loadUserData = async () => {
     try {
       const accountCode = session.get();

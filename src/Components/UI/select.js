@@ -38,7 +38,7 @@ export function SelectValue({ placeholder }) {
 
 export function SelectContent({ children, onValueChange, setOpen }) {
   return (
-    <div className="absolute top-full left-0 right-0 mt-1 bg-gray-900 border border-white/10 rounded-lg overflow-hidden z-50 max-h-60 overflow-y-auto">
+    <div className="absolute top-full left-0 right-0 mt-1 bg-gray-900 border border-white/10 rounded-lg overflow-hidden z-50 max-h-60 overflow-y-auto min-w-full">
       {React.Children.map(children, child =>
         React.cloneElement(child, { 
           onClick: (val) => {
