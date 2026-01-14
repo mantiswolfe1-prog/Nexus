@@ -38,6 +38,7 @@ export default function Browser() {
   const [bookmarks, setBookmarks] = useState(DEFAULT_BOOKMARKS);
   const [showBookmarks, setShowBookmarks] = useState(true);
   const [settings, setSettings] = useState({ browser: { searchEngine: 'google' } });
+    const [iframeError, setIframeError] = useState(false);
 
   const accentColor = '#3498db';
   const activeTab = tabs.find(t => t.id === activeTabId);
@@ -103,6 +104,9 @@ export default function Browser() {
 
   const navigateTo = (url) => {
     if (!url) return;
+    
+      // Reset iframe error state
+      setIframeError(false);
     
     // Add https if not present
     let finalUrl = url;
@@ -274,40 +278,65 @@ export default function Browser() {
           {/* Content Area */}
           <div className="flex-grow relative">
             {activeTab?.url ? (
-              <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
-                <motion.div 
-                  className="text-center p-8 max-w-md"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                >
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                    <Globe className="w-8 h-8 text-cyan-400" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-2">External Link</h3>
-                  <p className="text-white/70 mb-4">{activeTab.title}</p>
-                  <p className="text-sm text-white/50 mb-6">
-                    For security, external sites open in a new window
-                  </p>
-                  <NeonButton
-                    onClick={() => window.open(activeTab.url, '_blank')}
-                    className="gap-2"
-                  >
-                    <Globe className="w-4 h-4" />
-                    Open in New Window
-                  </NeonButton>
-                  <button
-                    onClick={() => {
-                      setTabs(prev => prev.map(t => 
-                        t.id === activeTabId ? { ...t, url: '', title: 'New Tab' } : t
-                      ));
-                      setUrlInput('');
-                    }}
-                    className="mt-3 text-sm text-white/40 hover:text-white/70 transition-colors"
-                  >
-                    Go back
-                  </button>
-                </motion.div>
-              </div>
+                <div className="w-full h-full bg-white rounded-lg overflow-hidden relative">
+                  {activeTab.loading ? (
+                    <div className="w-full h-full flex items-center justify-center bg-gray-900">
+                      <div className="text-center">
+                        <div className="inline-block w-8 h-8 border-4 border-cyan-500/30 border-t-cyan-400 rounded-full animate-spin mb-4"></div>
+                        <p className="text-white/60">Loading...</p>
+                      </div>
+                    </div>
+                  ) : iframeError ? (
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
+                      <motion.div 
+                        className="text-center p-8 max-w-md"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                      >
+                        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/20 flex items-center justify-center">
+                          <X className="w-8 h-8 text-red-400" />
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-2">Can't Display This Site</h3>
+                        <p className="text-white/70 mb-2">{activeTab.title}</p>
+                        <p className="text-sm text-white/50 mb-6">
+                          This site blocks embedding for security. Open it directly instead.
+                        </p>
+                        <div className="space-y-2">
+                          <NeonButton
+                            onClick={() => window.open(activeTab.url, '_blank', 'noopener,noreferrer')}
+                            className="gap-2 w-full"
+                          >
+                            <Globe className="w-4 h-4" />
+                            Open in New Tab
+                          </NeonButton>
+                          <button
+                            onClick={() => {
+                              setIframeError(false);
+                              setTabs(prev => prev.map(t => 
+                                t.id === activeTabId ? { ...t, url: '', title: 'New Tab' } : t
+                              ));
+                              setUrlInput('');
+                            }}
+                            className="w-full px-4 py-2 text-sm text-white/60 hover:text-white/90 transition-colors"
+                          >
+                            Go back
+                          </button>
+                        </div>
+                      </motion.div>
+                    </div>
+                  ) : (
+                    <>
+                      <iframe
+                        src={activeTab.url}
+                        className="w-full h-full border-0"
+                        title={activeTab.title}
+                        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                        referrerPolicy="no-referrer"
+                        onError={() => setIframeError(true)}
+                      />
+                    </>
+                  )}
+                </div>
             ) : (
               <div className="h-full flex flex-col items-center justify-center p-8">
                 {/* New Tab Page */}
