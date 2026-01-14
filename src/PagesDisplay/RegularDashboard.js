@@ -107,6 +107,17 @@ function DashboardContent() {
     window.location.href = 'https://www.google.com/search?q=math+homework';
   };
 
+  const handleLowEndModeToggle = async () => {
+    const newValue = !settings.lowEndMode;
+    const updatedSettings = { ...settings, lowEndMode: newValue };
+    setSettings(updatedSettings);
+    try {
+      await storage.saveSettings(updatedSettings);
+    } catch (err) {
+      console.error('Failed to save low-end mode:', err);
+    }
+  };
+
   const getGreeting = () => {
     const hour = currentTime.getHours();
     if (hour < 12) return 'Good Morning';
@@ -151,14 +162,6 @@ function DashboardContent() {
       stats: 'Your playlists'
     },
     { 
-      title: 'AI Tools', 
-      icon: Brain, 
-      description: 'Study helper, flashcards, notes & timers',
-      page: 'StudyTools',
-      accent: '#a55eea',
-      stats: '8 tools'
-    },
-    { 
       title: 'Browser', 
       icon: Globe, 
       description: 'Tabbed mini-browser with bookmarks',
@@ -183,36 +186,20 @@ function DashboardContent() {
       stats: 'Settings'
     },
     { 
-      title: 'Updates', 
-      icon: Zap, 
-      description: 'What\'s new - features, games & AI tools',
-      page: 'Updates',
-      accent: '#ffd700',
-      stats: 'Changelog'
-    },
-    { 
-      title: 'Analytics', 
+      title: 'User Analytics', 
       icon: BarChart3, 
-      description: 'Track your usage & see your habits',
-      page: 'Analytics',
+      description: 'Track usage, habits & streaks',
+      page: 'UserAnalytics',
       accent: '#00d4ff',
-      stats: 'Data'
-    },
-    { 
-      title: 'Habits', 
-      icon: Calendar, 
-      description: 'Daily study checklist & streaks',
-      page: 'Habits',
-      accent: '#10b981',
-      stats: 'Streaks'
+      stats: 'Insights'
     },
     { 
       title: 'Utilities', 
       icon: Wrench, 
-      description: 'Calculator, converter, whiteboard & more',
+      description: 'AI tools, calculator, converter, whiteboard & more',
       page: 'Utilities',
       accent: '#f368e0',
-      stats: '10+ tools'
+      stats: '15+ tools'
     }
   ];
 
@@ -272,8 +259,10 @@ function DashboardContent() {
             
             <QuickActions 
               accentColor={settings?.theme?.accent || '#00f0ff'}
-              panicMode={handlePanicMode}
+              panicMode={false}
+              setPanicMode={handlePanicMode}
               lowEndMode={settings?.lowEndMode || false}
+              setLowEndMode={handleLowEndModeToggle}
               onSettingsClick={() => navigate(createPageUrl('Settings'))}
             />
           </div>
@@ -305,51 +294,35 @@ function DashboardContent() {
           </motion.div>
         )}
 
-        {/* Stats Bar */}
+        {/* Notification Bar - Replaced Stats */}
         <motion.div 
-          className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8"
+          className="mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <GlassCard className="p-4" hover={false}>
-            <div className="flex items-center gap-3">
-              <Clock className="w-5 h-5" style={{ color: settings?.theme?.accent || '#00f0ff' }} />
-              <div>
-                <p className="text-2xl font-bold text-white">
-                  {currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
-                </p>
-                <p className="text-xs text-white/50">Current Time</p>
-              </div>
-            </div>
-          </GlassCard>
-          
-          <GlassCard className="p-4" hover={false}>
-            <div className="flex items-center gap-3">
-              <Star className="w-5 h-5 text-yellow-400" />
-              <div>
-                <p className="text-2xl font-bold text-white">{favorites.length}</p>
-                <p className="text-xs text-white/50">Favorites</p>
-              </div>
-            </div>
-          </GlassCard>
-          
-          <GlassCard className="p-4" hover={false}>
-            <div className="flex items-center gap-3">
-              <Gamepad2 className="w-5 h-5 text-red-400" />
-              <div>
-                <p className="text-2xl font-bold text-white">-</p>
-                <p className="text-xs text-white/50">Recent Games</p>
-              </div>
-            </div>
-          </GlassCard>
-          
-          <GlassCard className="p-4" hover={false}>
-            <div className="flex items-center gap-3">
-              <Brain className="w-5 h-5 text-purple-400" />
-              <div>
-                <p className="text-2xl font-bold text-white">-</p>
-                <p className="text-xs text-white/50">Study Items</p>
+          <GlassCard className="p-4" hover={false} accentColor={settings?.theme?.accent}>
+            <div className="flex items-start gap-3">
+              <Bell className="w-5 h-5 text-white/70 mt-0.5" />
+              <div className="flex-1">
+                <h3 className="text-white font-medium mb-1">Quick Info</h3>
+                <div className="flex flex-wrap items-center gap-4 text-sm text-white/60">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4" />
+                    <span>{currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Star className="w-4 h-4 text-yellow-400" />
+                    <span>{favorites.length} Favorites</span>
+                  </div>
+                  {globalNotices.length > 0 && (
+                    <div className="flex items-center gap-2 text-white/90">
+                      <span className="px-2 py-0.5 rounded-full bg-white/10 text-xs">
+                        {globalNotices.length} new {globalNotices.length === 1 ? 'message' : 'messages'}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </GlassCard>

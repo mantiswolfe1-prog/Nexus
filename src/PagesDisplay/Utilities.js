@@ -9,7 +9,11 @@ import {
   Ruler,
   Hash,
   Clock,
-  Calendar
+  Calendar,
+  Brain,
+  BookOpen,
+  Lightbulb,
+  Timer
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from 'utils';
@@ -19,6 +23,13 @@ import NeonButton from '../Components/UI/NeonButton.js';
 import Calculator from '../Components/Utilities/Calculator.js';
 import UnitConverter from '../Components/Utilities/UnitConverter.js';
 import Whiteboard from '../Components/Utilities/Whiteboard.js';
+import AIHelper from '../Components/Study/AIHelper.js';
+import FlashcardDeck from '../Components/Study/FlashcardDeck.js';
+import NotesPanel from '../Components/Study/NotesPanel.js';
+import PomodoroTimer from '../Components/Study/PomodoroTimer.js';
+import ScientificCalculator from '../Components/Study/ScientificCalculator.js';
+import FormulaSheet from '../Components/Study/FormulaSheet.js';
+import Dictionary from '../Components/Study/Dictionary.js';
 
 export default function Utilities() {
   const [activeTab, setActiveTab] = useState('all');
@@ -26,6 +37,7 @@ export default function Utilities() {
 
   const tabs = [
     { id: 'all', label: 'All Tools', icon: Wrench },
+    { id: 'ai', label: 'AI & Study', icon: Brain },
     { id: 'calculator', label: 'Calculator', icon: CalcIcon },
     { id: 'converter', label: 'Converter', icon: ArrowLeftRight },
     { id: 'whiteboard', label: 'Whiteboard', icon: PenTool },
@@ -36,6 +48,16 @@ export default function Utilities() {
     { id: 'counter', name: 'Counter', icon: Hash, color: '#ffd93d' },
     { id: 'stopwatch', name: 'Stopwatch', icon: Clock, color: '#6bcb77' },
     { id: 'countdown', name: 'Countdown', icon: Calendar, color: '#4d96ff' },
+  ];
+
+  const aiTools = [
+    { id: 'ai-helper', name: 'AI Helper', icon: Brain, color: '#a55eea', component: AIHelper },
+    { id: 'flashcards', name: 'Flashcards', icon: BookOpen, color: '#ff6b6b', component: FlashcardDeck },
+    { id: 'notes', name: 'Notes', icon: PenTool, color: '#ffd93d', component: NotesPanel },
+    { id: 'pomodoro', name: 'Pomodoro', icon: Timer, color: '#6bcb77', component: PomodoroTimer },
+    { id: 'sci-calc', name: 'Scientific Calc', icon: CalcIcon, color: '#4d96ff', component: ScientificCalculator },
+    { id: 'formulas', name: 'Formulas', icon: Lightbulb, color: '#ff9f43', component: FormulaSheet },
+    { id: 'dictionary', name: 'Dictionary', icon: BookOpen, color: '#1dd1a1', component: Dictionary },
   ];
 
   return (
@@ -56,8 +78,8 @@ export default function Utilities() {
               </NeonButton>
             </Link>
             <div>
-              <h1 className="text-3xl font-bold text-white">Utilities</h1>
-              <p className="text-white/50">Helpful tools for everyday tasks</p>
+              <h1 className="text-3xl font-bold text-white">Utilities & AI Tools</h1>
+              <p className="text-white/50">Helpful tools, calculators & AI study helpers</p>
             </div>
           </div>
 
@@ -92,6 +114,19 @@ export default function Utilities() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
+          {/* AI & Study Tools */}
+          {(activeTab === 'all' || activeTab === 'ai') && aiTools.map((tool, index) => (
+            <motion.div
+              key={tool.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 * (index + 1) }}
+              className="flex justify-center"
+            >
+              <tool.component accentColor={tool.color} />
+            </motion.div>
+          ))}
+
           {(activeTab === 'all' || activeTab === 'calculator') && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}

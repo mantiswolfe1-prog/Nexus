@@ -10,6 +10,7 @@ import Settings from './PagesDisplay/Settings.js';
 import Updates from './PagesDisplay/Updates.js';
 import Analytics from './PagesDisplay/Analytics.js';
 import HabitTracker from './PagesDisplay/HabitTracker.js';
+import UserAnalytics from './PagesDisplay/UserAnalytics.js';
 import Games from './PagesDisplay/Games.js';
 import StudyTools from './PagesDisplay/StudyTools.js';
 import Music from './PagesDisplay/Music.js';
@@ -70,6 +71,7 @@ function App() {
             <Route path="/updates" element={<Updates />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/habits" element={<HabitTracker />} />
+            <Route path="/useranalytics" element={<UserAnalytics />} />
             <Route path="/games" element={<Games />} />
             <Route path="/studytools" element={<StudyTools />} />
             <Route path="/music" element={<Music />} />

@@ -14,7 +14,7 @@ const SAMPLE_GAMES = [
   { 
     id: 1, 
     title: '2048', 
-    thumbnail: 'https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=400&h=225&fit=crop', 
+    thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225"%3E%3Crect fill="%23edc850" width="400" height="225"/%3E%3Ctext x="50%25" y="50%25" font-size="72" fill="%23fff" text-anchor="middle" dy=".3em" font-family="Arial,sans-serif" font-weight="bold"%3E2048%3C/text%3E%3C/svg%3E', 
     tags: ['puzzle', 'casual', 'math'], 
     performance: 'low', 
     source: 'poki', 
@@ -24,7 +24,7 @@ const SAMPLE_GAMES = [
   { 
     id: 2, 
     title: 'Subway Surfers', 
-    thumbnail: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=225&fit=crop', 
+    thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225"%3E%3Cdefs%3E%3ClinearGradient id="g" x1="0" y1="0" x2="1" y2="1"%3E%3Cstop offset="0%25" stop-color="%2300bcd4"/%3E%3Cstop offset="100%25" stop-color="%23ff9800"/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill="url(%23g)" width="400" height="225"/%3E%3Ctext x="50%25" y="50%25" font-size="36" fill="%23fff" text-anchor="middle" dy=".3em" font-family="Arial,sans-serif" font-weight="bold"%3ESubway Surfers%3C/text%3E%3C/svg%3E', 
     tags: ['arcade', 'endless-runner', 'action'], 
     performance: 'medium', 
     source: 'crazygames', 
@@ -34,7 +34,7 @@ const SAMPLE_GAMES = [
   { 
     id: 3, 
     title: 'Slope', 
-    thumbnail: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=225&fit=crop', 
+    thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225"%3E%3Crect fill="%2344d62c" width="400" height="225"/%3E%3Cpolygon points="50,175 200,75 350,150" fill="%23fff" opacity="0.3"/%3E%3Ctext x="50%25" y="50%25" font-size="48" fill="%23fff" text-anchor="middle" dy=".3em" font-family="Arial,sans-serif" font-weight="bold"%3ESlope%3C/text%3E%3C/svg%3E', 
     tags: ['action', '3d', 'skill'], 
     performance: 'medium', 
     source: 'coolmath', 
@@ -44,7 +44,7 @@ const SAMPLE_GAMES = [
   { 
     id: 4, 
     title: 'Chess', 
-    thumbnail: 'https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=400&h=225&fit=crop', 
+    thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225"%3E%3Crect fill="%23312e2b" width="400" height="225"/%3E%3Cg transform="translate(150,60)"%3E%3Crect fill="%23fff" width="25" height="25"/%3E%3Crect fill="%23312e2b" x="25" width="25" height="25"/%3E%3Crect fill="%23312e2b" y="25" width="25" height="25"/%3E%3Crect fill="%23fff" x="25" y="25" width="25" height="25"/%3E%3C/g%3E%3Ctext x="50%25" y="75%25" font-size="42" fill="%23fff" text-anchor="middle" dy=".3em" font-family="Arial,sans-serif" font-weight="bold"%3EChess%3C/text%3E%3C/svg%3E', 
     tags: ['strategy', 'board', 'multiplayer'], 
     performance: 'low', 
     source: 'poki', 
@@ -54,7 +54,7 @@ const SAMPLE_GAMES = [
   { 
     id: 5, 
     title: 'Moto X3M', 
-    thumbnail: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=225&fit=crop', 
+    thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225"%3E%3Cdefs%3E%3ClinearGradient id="m" x1="0" y1="0" x2="1" y2="0"%3E%3Cstop offset="0%25" stop-color="%23ff6b35"/%3E%3Cstop offset="100%25" stop-color="%23f7931e"/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill="url(%23m)" width="400" height="225"/%3E%3Ctext x="50%25" y="50%25" font-size="42" fill="%23fff" text-anchor="middle" dy=".3em" font-family="Arial,sans-serif" font-weight="bold"%3EMoto X3M%3C/text%3E%3C/svg%3E', 
     tags: ['racing', 'bike', 'stunts'], 
     performance: 'medium', 
     source: 'crazygames', 
@@ -64,7 +64,7 @@ const SAMPLE_GAMES = [
   { 
     id: 6, 
     title: 'Basketball Stars', 
-    thumbnail: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=225&fit=crop', 
+    thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225"%3E%3Crect fill="%23ff6347" width="400" height="225"/%3E%3Ccircle cx="200" cy="112" r="40" fill="%23ff8c42" stroke="%23000" stroke-width="3"/%3E%3Ctext x="50%25" y="80%25" font-size="36" fill="%23fff" text-anchor="middle" dy=".3em" font-family="Arial,sans-serif" font-weight="bold"%3EBasketball%3C/text%3E%3C/svg%3E', 
     tags: ['sports', 'basketball', 'multiplayer'], 
     performance: 'medium', 
     source: 'poki', 
@@ -74,7 +74,7 @@ const SAMPLE_GAMES = [
   { 
     id: 7, 
     title: 'Fireboy and Watergirl', 
-    thumbnail: 'https://images.unsplash.com/photo-1493711662062-fa541f7f3d24?w=400&h=225&fit=crop', 
+    thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225"%3E%3Cdefs%3E%3ClinearGradient id="fw" x1="0" y1="0" x2="1" y2="0"%3E%3Cstop offset="0%25" stop-color="%23ff4444"/%3E%3Cstop offset="100%25" stop-color="%234444ff"/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill="url(%23fw)" width="400" height="225"/%3E%3Ctext x="50%25" y="50%25" font-size="32" fill="%23fff" text-anchor="middle" dy=".3em" font-family="Arial,sans-serif" font-weight="bold"%3EFireboy %26 Watergirl%3C/text%3E%3C/svg%3E', 
     tags: ['adventure', 'puzzle', 'co-op'], 
     performance: 'low', 
     source: 'coolmath', 
@@ -84,7 +84,7 @@ const SAMPLE_GAMES = [
   { 
     id: 8, 
     title: 'Temple Run', 
-    thumbnail: 'https://images.unsplash.com/photo-1511882150382-421056c89033?w=400&h=225&fit=crop', 
+    thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225"%3E%3Crect fill="%23228b22" width="400" height="225"/%3E%3Crect x="150" y="60" width="100" height="120" fill="%23d4a574"/%3E%3Ctext x="50%25" y="85%25" font-size="36" fill="%23fff" text-anchor="middle" dy=".3em" font-family="Arial,sans-serif" font-weight="bold"%3ETemple Run%3C/text%3E%3C/svg%3E', 
     tags: ['action', 'endless-runner', '3d'], 
     performance: 'high', 
     source: 'crazygames', 
@@ -94,7 +94,7 @@ const SAMPLE_GAMES = [
   { 
     id: 9, 
     title: 'Cut the Rope', 
-    thumbnail: 'https://images.unsplash.com/photo-1535572290543-960a8046f5af?w=400&h=225&fit=crop', 
+    thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225"%3E%3Crect fill="%2344d62c" width="400" height="225"/%3E%3Ccircle cx="200" cy="100" r="35" fill="%2376d672"/%3E%3Ccircle cx="190" cy="95" r="8" fill="%23000"/%3E%3Ccircle cx="210" cy="95" r="8" fill="%23000"/%3E%3Ctext x="50%25" y="80%25" font-size="32" fill="%23fff" text-anchor="middle" dy=".3em" font-family="Arial,sans-serif" font-weight="bold"%3ECut the Rope%3C/text%3E%3C/svg%3E', 
     tags: ['puzzle', 'casual', 'physics'], 
     performance: 'low', 
     source: 'poki', 
@@ -104,7 +104,7 @@ const SAMPLE_GAMES = [
   { 
     id: 10, 
     title: 'Happy Wheels', 
-    thumbnail: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400&h=225&fit=crop', 
+    thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225"%3E%3Crect fill="%23ff1744" width="400" height="225"/%3E%3Ccircle cx="160" cy="140" r="30" fill="%23333"/%3E%3Ccircle cx="240" cy="140" r="30" fill="%23333"/%3E%3Ctext x="50%25" y="40%25" font-size="36" fill="%23fff" text-anchor="middle" dy=".3em" font-family="Arial,sans-serif" font-weight="bold"%3EHappy Wheels%3C/text%3E%3C/svg%3E', 
     tags: ['action', 'physics', 'funny'], 
     performance: 'medium', 
     source: 'crazygames', 
@@ -114,7 +114,7 @@ const SAMPLE_GAMES = [
   { 
     id: 11, 
     title: 'Run 3', 
-    thumbnail: 'https://images.unsplash.com/photo-1552820728-8b83bb6b2b07?w=400&h=225&fit=crop', 
+    thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225"%3E%3Crect fill="%23000" width="400" height="225"/%3E%3Ctext x="50%25" y="50%25" font-size="72" fill="%2300ffff" text-anchor="middle" dy=".3em" font-family="Arial,sans-serif" font-weight="bold"%3ERUN 3%3C/text%3E%3C/svg%3E', 
     tags: ['arcade', '3d', 'endless-runner'], 
     performance: 'low', 
     source: 'coolmath', 
@@ -712,8 +712,8 @@ export default function Games() {
       // Open in external browser
       window.open(game.url, '_blank', 'noopener,noreferrer');
     } else {
-      // Open in Nexus browser
-      navigate('/browser', { state: { url: game.url } });
+      // Open in modal iframe by default
+      setPlayingGame(game);
     }
   };
 

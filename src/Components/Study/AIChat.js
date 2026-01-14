@@ -1,26 +1,90 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import GlassCard from '../UI/GlassCard.js';
 import { Input } from '../UI/input.js';
 import NeonButton from '../UI/NeonButton.js';
+import { getPersonalityResponse, getTimedTip } from '../../utils/personalities.js';
+import { storage } from '../Storage/clientStorage.js';
 
 export default function AIChat({ accentColor }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [personality, setPersonality] = useState('adaptive');
+
+  useEffect(() => {
+    // Load personality from settings
+    const loadPersonality = async () => {
+      try {
+        await storage.init();
+        const settings = await storage.loadSettings();
+        if (settings?.aiPersonality) {
+          setPersonality(settings.aiPersonality);
+        }
+      } catch (err) {
+        console.error('Failed to load AI personality:', err);
+      }
+    };
+    loadPersonality();
+  }, []);
+
+  const generateResponse = (userMessage) => {
+    const lowerMsg = userMessage.toLowerCase();
+    
+    // Help/greeting
+    if (lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey')) {
+      return getPersonalityResponse(personality, 'greeting');
+    }
+    
+    // Search requests
+    if (lowerMsg.includes('search') || lowerMsg.includes('find') || lowerMsg.includes('look up')) {
+      return getPersonalityResponse(personality, 'search');
+    }
+    
+    // Definition requests
+    if (lowerMsg.includes('what is') || lowerMsg.includes('define') || lowerMsg.includes('meaning of')) {
+      const word = userMessage.split(' ').pop();
+      return getPersonalityResponse(personality, 'definition').replace('{word}', word);
+    }
+    
+    // Encouragement
+    if (lowerMsg.includes('help') || lowerMsg.includes('stuck') || lowerMsg.includes('difficult')) {
+      return getPersonalityResponse(personality, 'encouragement');
+    }
+    
+    // Tips
+    if (lowerMsg.includes('tip') || lowerMsg.includes('advice') || lowerMsg.includes('suggest')) {
+      const tip = getTimedTip(personality);
+      return getPersonalityResponse(personality, 'tip').replace('{tip}', tip);
+    }
+    
+    // Default fallback with personality
+    const defaultResponses = {
+      adaptive: "I understand what you're asking. Let me help you with that.",
+      kind: "That's a great question! I'm here to help you figure it out! 💡",
+      moody: "Alright, alright. I see what you're getting at. Let me think...",
+      professional: "I've noted your query. Let me provide an appropriate response.",
+      mentor: "Excellent question! Let me break this down for you step by step.",
+      chill: "Yeah, I got you. Let me help you out with that. 👍"
+    };
+    
+    return defaultResponses[personality] || defaultResponses.adaptive;
+  };
 
   const handleSend = () => {
     if (!input.trim()) return;
     
     setMessages(prev => [...prev, { role: 'user', content: input }]);
+    const userInput = input;
     setInput('');
     
-    // Simulate AI response
+    // Generate AI response
     setTimeout(() => {
+      const response = generateResponse(userInput);
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: 'AI assistant responses would appear here. Connect to Base44 AI integration for real responses.' 
+        content: response
       }]);
-    }, 1000);
+    }, 800);
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Repeat, Shuffle } from 'lucide-react';
 import GlassCard from '../UI/GlassCard.js';
@@ -8,17 +8,74 @@ export default function MusicPlayer({
   track,
   isPlaying,
   onPlayPause,
+  onNext,
+  onPrevious,
   accentColor = '#1db954'
 }) {
+  const audioRef = useRef(null);
   const [volume, setVolume] = useState(75);
   const [isMuted, setIsMuted] = useState(false);
-  const [progress, setProgress] = useState(35);
+  const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  useEffect(() => {
+    if (!audioRef.current) return;
+
+    const audio = audioRef.current;
+    
+    if (isPlaying) {
+      audio.play().catch(err => console.error('Audio play failed:', err));
+    } else {
+      audio.pause();
+    }
+  }, [isPlaying, track]);
+
+  useEffect(() => {
+    if (!audioRef.current) return;
+    audioRef.current.volume = isMuted ? 0 : volume / 100;
+  }, [volume, isMuted]);
+
+  const handleTimeUpdate = () => {
+    if (!audioRef.current) return;
+    const current = audioRef.current.currentTime;
+    const total = audioRef.current.duration || 0;
+    setCurrentTime(current);
+    setProgress((current / total) * 100 || 0);
+  };
+
+  const handleLoadedMetadata = () => {
+    if (!audioRef.current) return;
+    setDuration(audioRef.current.duration);
+  };
+
+  const handleProgressChange = ([val]) => {
+    if (!audioRef.current) return;
+    const newTime = (val / 100) * audioRef.current.duration;
+    audioRef.current.currentTime = newTime;
+    setProgress(val);
+  };
+
+  const formatTime = (seconds) => {
+    if (!seconds || isNaN(seconds)) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   if (!track) return null;
 
   return (
-    <GlassCard className="p-4" accentColor={accentColor} hover={false}>
-      <div className="flex items-center gap-4">
+    <>
+      <audio
+        ref={audioRef}
+        src={track.audioUrl}
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        onEnded={onNext}
+      />
+      <GlassCard className="p-4" accentColor={accentColor} hover={false}>
+        <div className="flex items-center gap-4">
         {/* Album Art */}
         <motion.div 
           className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden flex-shrink-0"
@@ -39,15 +96,15 @@ export default function MusicPlayer({
           
           {/* Progress Bar */}
           <div className="mt-2 flex items-center gap-2">
-            <span className="text-xs text-white/40">1:24</span>
+            <span className="text-xs text-white/40">{formatTime(currentTime)}</span>
             <Slider
               value={[progress]}
-              onValueChange={([val]) => setProgress(val)}
+              onValueChange={handleProgressChange}
               max={100}
-              step={1}
+              step={0.1}
               className="flex-grow"
             />
-            <span className="text-xs text-white/40">3:45</span>
+            <span className="text-xs text-white/40">{formatTime(duration)}</span>
           </div>
         </div>
 
@@ -64,6 +121,7 @@ export default function MusicPlayer({
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
+            onClick={onPrevious}
             className="p-2 text-white/70 hover:text-white transition-colors"
           >
             <SkipBack className="w-5 h-5" />
@@ -82,6 +140,7 @@ export default function MusicPlayer({
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
+            onClick={onNext}
             className="p-2 text-white/70 hover:text-white transition-colors"
           >
             <SkipForward className="w-5 h-5" />
@@ -118,5 +177,6 @@ export default function MusicPlayer({
         </div>
       </div>
     </GlassCard>
+    </>
   );
 }

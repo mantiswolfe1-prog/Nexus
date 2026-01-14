@@ -12,7 +12,7 @@ const VIDEO_SERVICES = [
   { 
     id: 'youtube', 
     name: 'YouTube', 
-    thumbnail: 'https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=400&h=225&fit=crop',
+    thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225"%3E%3Crect fill="%23ff0000" width="400" height="225"/%3E%3Cpolygon points="160,75 160,150 250,112.5" fill="%23fff"/%3E%3Ctext x="50%25" y="85%25" font-size="42" fill="%23fff" text-anchor="middle" dy=".3em" font-family="Arial,sans-serif" font-weight="bold"%3EYouTube%3C/text%3E%3C/svg%3E',
     color: '#ff0000',
     type: 'embed',
     description: 'Watch videos, shorts & live streams',
@@ -21,7 +21,7 @@ const VIDEO_SERVICES = [
   { 
     id: 'tiktok', 
     name: 'TikTok', 
-    thumbnail: 'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=225&fit=crop',
+    thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225"%3E%3Cdefs%3E%3ClinearGradient id="t" x1="0" y1="0" x2="1" y2="1"%3E%3Cstop offset="0%25" stop-color="%2300f2ea"/%3E%3Cstop offset="100%25" stop-color="%23ff0050"/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill="url(%23t)" width="400" height="225"/%3E%3Ctext x="50%25" y="50%25" font-size="48" fill="%23fff" text-anchor="middle" dy=".3em" font-family="Arial,sans-serif" font-weight="bold"%3ETikTok%3C/text%3E%3C/svg%3E',
     color: '#00f2ea',
     type: 'embed',
     description: 'Short-form video content',
@@ -30,7 +30,7 @@ const VIDEO_SERVICES = [
   { 
     id: 'netflix', 
     name: 'Netflix', 
-    thumbnail: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=400&h=225&fit=crop',
+    thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225"%3E%3Crect fill="%23000" width="400" height="225"/%3E%3Ctext x="50%25" y="50%25" font-size="56" fill="%23e50914" text-anchor="middle" dy=".3em" font-family="Arial,sans-serif" font-weight="bold"%3ENETFLIX%3C/text%3E%3C/svg%3E',
     color: '#e50914',
     type: 'external',
     description: 'Movies & TV shows (subscription)',
@@ -39,7 +39,7 @@ const VIDEO_SERVICES = [
   { 
     id: 'disney', 
     name: 'Disney+', 
-    thumbnail: 'https://images.unsplash.com/photo-1640499900704-b00dd6a1103a?w=400&h=225&fit=crop',
+    thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225"%3E%3Crect fill="%23113ccf" width="400" height="225"/%3E%3Ctext x="50%25" y="50%25" font-size="52" fill="%23fff" text-anchor="middle" dy=".3em" font-family="Arial,sans-serif" font-weight="bold"%3EDisney%2B%3C/text%3E%3C/svg%3E',
     color: '#113ccf',
     type: 'external',
     description: 'Disney, Marvel, Star Wars & more',
@@ -48,7 +48,7 @@ const VIDEO_SERVICES = [
   { 
     id: 'hulu', 
     name: 'Hulu', 
-    thumbnail: 'https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=400&h=225&fit=crop',
+    thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225"%3E%3Crect fill="%23000" width="400" height="225"/%3E%3Ctext x="50%25" y="50%25" font-size="64" fill="%231ce783" text-anchor="middle" dy=".3em" font-family="Arial,sans-serif" font-weight="bold"%3Ehulu%3C/text%3E%3C/svg%3E',
     color: '#1ce783',
     type: 'external',
     description: 'TV shows & original content',
@@ -57,7 +57,7 @@ const VIDEO_SERVICES = [
   { 
     id: 'prime', 
     name: 'Prime Video', 
-    thumbnail: 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=400&h=225&fit=crop',
+    thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="225"%3E%3Crect fill="%2300a8e1" width="400" height="225"/%3E%3Ctext x="50%25" y="50%25" font-size="42" fill="%23fff" text-anchor="middle" dy=".3em" font-family="Arial,sans-serif" font-weight="bold"%3EPrime Video%3C/text%3E%3C/svg%3E',
     color: '#00a8e1',
     type: 'external',
     description: 'Amazon original series & movies',

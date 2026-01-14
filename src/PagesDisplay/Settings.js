@@ -22,7 +22,8 @@ import {
   Eye,
   EyeOff,
   Check,
-  Globe
+  Globe,
+  Zap
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils.js';
@@ -64,6 +65,12 @@ export default function Settings() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedSections, setExpandedSections] = useState({});
+  const [showUpdatesHover, setShowUpdatesHover] = useState(false);
+  const [editUsername, setEditUsername] = useState(false);
+  const [newUsername, setNewUsername] = useState('');
+  const [editPassword, setEditPassword] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -71,7 +78,19 @@ export default function Settings() {
     const interval = setInterval(() => {
       if (regenerateCooldown > 0) setRegenerateCooldown(prev => prev - 1);
     }, 1000);
-    return () => clearInterval(interval);
+    
+    // ESC key handler
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && window.location.pathname.includes('updates')) {
+        navigate(createPageUrl('Settings'));
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('keydown', handleEscape);
+    };
   }, [regenerateCooldown]);
 
   const loadSettings = async () => {
@@ -157,6 +176,52 @@ export default function Settings() {
   const handleLogout = () => {
     session.clear();
     navigate(createPageUrl('Landing'));
+  };
+
+  const handleUpdateUsername = async () => {
+    if (!newUsername.trim()) {
+      alert('Username cannot be empty');
+      return;
+    }
+    
+    try {
+      const updatedUser = { ...user, username: newUsername };
+      await storage.saveUser(newUsername, accessCode);
+      setUser(updatedUser);
+      setEditUsername(false);
+      setNewUsername('');
+      alert('Username updated successfully!');
+    } catch (err) {
+      console.error('Failed to update username:', err);
+      alert('Failed to update username');
+    }
+  };
+
+  const handleUpdatePassword = async () => {
+    if (!newPassword.trim() || newPassword.length < 5) {
+      alert('Password must be at least 5 characters');
+      return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+    
+    try {
+      // Update access code (password)
+      const newCode = newPassword;
+      await storage.saveUser(user.username, newCode);
+      session.set(newCode, true, userRole);
+      setAccessCode(newCode);
+      setEditPassword(false);
+      setNewPassword('');
+      setConfirmPassword('');
+      alert('Password updated successfully! Please use your new password to log in next time.');
+    } catch (err) {
+      console.error('Failed to update password:', err);
+      alert('Failed to update password');
+    }
   };
 
   const regenerateInviteCode = () => {
@@ -449,15 +514,102 @@ export default function Settings() {
         keywords: ['account', 'access', 'code', 'login', 'logout'],
         custom: (
           <div className="space-y-4">
+            {/* Username Section */}
             <div className="p-4 rounded-xl bg-white/5">
-              <h4 className="text-white font-medium mb-1">Username</h4>
-              <p className="text-white/70">{user?.username}</p>
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="text-white font-medium">Username</h4>
+                {!editUsername && (
+                  <NeonButton 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => {
+                      setEditUsername(true);
+                      setNewUsername(user?.username || '');
+                    }}
+                  >
+                    Edit
+                  </NeonButton>
+                )}
+              </div>
+              {editUsername ? (
+                <div className="space-y-2">
+                  <Input
+                    type="text"
+                    value={newUsername}
+                    onChange={(e) => setNewUsername(e.target.value)}
+                    placeholder="Enter new username"
+                    className="bg-white/5 border-white/10 text-white"
+                  />
+                  <div className="flex gap-2">
+                    <NeonButton variant="primary" size="sm" onClick={handleUpdateUsername}>
+                      <Check className="w-3 h-3 mr-1" />
+                      Save
+                    </NeonButton>
+                    <NeonButton variant="ghost" size="sm" onClick={() => {
+                      setEditUsername(false);
+                      setNewUsername('');
+                    }}>
+                      Cancel
+                    </NeonButton>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-white/70">{user?.username}</p>
+              )}
             </div>
+
+            {/* Password Section */}
             <div className="p-4 rounded-xl bg-white/5">
-              <h4 className="text-white font-medium mb-2">Access Code</h4>
-              <p className="text-white/70 font-mono text-sm">{accessCode}</p>
-              <p className="text-white/40 text-xs mt-2">Save this code to log in again (5-20 chars)</p>
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="text-white font-medium">Password / Access Code</h4>
+                {!editPassword && (
+                  <NeonButton 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => setEditPassword(true)}
+                  >
+                    Change
+                  </NeonButton>
+                )}
+              </div>
+              {editPassword ? (
+                <div className="space-y-2">
+                  <Input
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="New password (5-20 chars)"
+                    className="bg-white/5 border-white/10 text-white"
+                  />
+                  <Input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm new password"
+                    className="bg-white/5 border-white/10 text-white"
+                  />
+                  <div className="flex gap-2">
+                    <NeonButton variant="primary" size="sm" onClick={handleUpdatePassword}>
+                      <Check className="w-3 h-3 mr-1" />
+                      Update
+                    </NeonButton>
+                    <NeonButton variant="ghost" size="sm" onClick={() => {
+                      setEditPassword(false);
+                      setNewPassword('');
+                      setConfirmPassword('');
+                    }}>
+                      Cancel
+                    </NeonButton>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <p className="text-white/70 font-mono text-sm">{'•'.repeat(accessCode.length)}</p>
+                  <p className="text-white/40 text-xs mt-2">Click "Change" to update your password</p>
+                </>
+              )}
             </div>
+
             <div className="flex gap-2">
               <NeonButton variant="ghost" onClick={exportData} className="flex-1">
                 <Download className="w-3 h-3 mr-1" />
@@ -570,6 +722,30 @@ export default function Settings() {
               </div>
             </div>
             <div className="flex items-center gap-4">
+              {/* Updates Link with Hover */}
+              <div className="relative">
+                <motion.div
+                  onMouseEnter={() => setShowUpdatesHover(true)}
+                  onMouseLeave={() => setShowUpdatesHover(false)}
+                  onClick={() => navigate(createPageUrl('Updates'))}
+                  className="cursor-pointer flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Zap className="w-4 h-4 text-yellow-400" />
+                  <span className="text-sm text-white/70">Updates</span>
+                </motion.div>
+                {showUpdatesHover && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="absolute top-full mt-2 right-0 bg-black/90 border border-white/10 rounded-xl px-3 py-2 text-xs text-white/70 whitespace-nowrap z-50"
+                  >
+                    Click to view updates • ESC to return
+                  </motion.div>
+                )}
+              </div>
+              
               <div className="text-right">
                 <p className="text-xs text-white/40">Build Version</p>
                 <p className="text-sm text-white/70 font-mono">{BUILD_VERSION}</p>

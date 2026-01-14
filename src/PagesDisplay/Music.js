@@ -46,38 +46,43 @@ const MUSIC_SERVICES = [
 const SAMPLE_TRACKS = [
   { 
     id: 1, 
-    title: 'Blinding Lights', 
-    artist: 'The Weeknd', 
+    title: 'Lofi Study Beat', 
+    artist: 'Chillhop Music', 
     albumArt: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=200&fit=crop',
-    duration: '3:20'
+    duration: '3:20',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
   },
   { 
     id: 2, 
-    title: 'Levitating', 
-    artist: 'Dua Lipa', 
+    title: 'Chill Vibes', 
+    artist: 'Relaxing Sounds', 
     albumArt: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=200&h=200&fit=crop',
-    duration: '3:45'
+    duration: '3:45',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'
   },
   { 
     id: 3, 
-    title: 'Stay', 
-    artist: 'The Kid LAROI', 
+    title: 'Focus Flow', 
+    artist: 'Study Beats', 
     albumArt: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=200&h=200&fit=crop',
-    duration: '2:21'
+    duration: '2:21',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'
   },
   { 
     id: 4, 
-    title: 'Good 4 U', 
-    artist: 'Olivia Rodrigo', 
+    title: 'Ambient Dreams', 
+    artist: 'Peaceful Mind', 
     albumArt: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&h=200&fit=crop',
-    duration: '2:58'
+    duration: '2:58',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3'
   },
   { 
     id: 5, 
-    title: 'Peaches', 
-    artist: 'Justin Bieber', 
+    title: 'Deep Concentration', 
+    artist: 'Brain Waves', 
     albumArt: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200&h=200&fit=crop',
-    duration: '3:18'
+    duration: '3:18',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3'
   },
 ];
 
@@ -95,6 +100,18 @@ export default function Music() {
         ? prev.filter(id => id !== trackId)
         : [...prev, trackId]
     );
+  };
+
+  const handleNext = () => {
+    const currentIndex = SAMPLE_TRACKS.findIndex(t => t.id === currentTrack.id);
+    const nextIndex = (currentIndex + 1) % SAMPLE_TRACKS.length;
+    setCurrentTrack(SAMPLE_TRACKS[nextIndex]);
+  };
+
+  const handlePrevious = () => {
+    const currentIndex = SAMPLE_TRACKS.findIndex(t => t.id === currentTrack.id);
+    const prevIndex = (currentIndex - 1 + SAMPLE_TRACKS.length) % SAMPLE_TRACKS.length;
+    setCurrentTrack(SAMPLE_TRACKS[prevIndex]);
   };
 
   return (
@@ -308,6 +325,8 @@ export default function Music() {
             track={currentTrack}
             isPlaying={isPlaying}
             onPlayPause={() => setIsPlaying(!isPlaying)}
+            onNext={handleNext}
+            onPrevious={handlePrevious}
             accentColor={accentColor}
           />
         </div>
