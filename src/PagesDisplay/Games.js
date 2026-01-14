@@ -911,6 +911,7 @@ export default function Games() {
                       className="w-full h-full border-0"
                       title={playingGame.title}
                       allowFullScreen
+                      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation"
                     />
                   </div>
                 </GlassCard>

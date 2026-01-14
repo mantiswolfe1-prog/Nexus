@@ -355,16 +355,6 @@ export default function Browser() {
                         title={activeTab.title}
                         sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation"
                         referrerPolicy="no-referrer"
-                        onError={() => setIframeError(true)}
-                        onLoad={(e) => {
-                          try {
-                            // Try to access iframe content - will throw if blocked
-                            e.target.contentWindow.location.href;
-                          } catch (err) {
-                            // Site blocks iframe embedding
-                            setIframeError(true);
-                          }
-                        }}
                       />
                     </>
                   )}
