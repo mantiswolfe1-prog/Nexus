@@ -121,30 +121,38 @@ export default function Browser() {
   const navigateTo = (url) => {
     if (!url) return;
 
-    // Always force a fresh tab that points to about:blank, immediately close the old one
+    // Reset iframe error state
+    setIframeError(false);
+    
+    // Add https if not present
     let finalUrl = url;
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      // Check if it's a search query or URL
       if (url.includes('.') && !url.includes(' ')) {
         finalUrl = 'https://' + url;
       } else {
+        // Use selected search engine
         const searchEngine = settings.browser?.searchEngine || 'google';
         const searchUrl = searchEngines[searchEngine] || searchEngines.google;
         finalUrl = `${searchUrl}${encodeURIComponent(url)}`;
       }
     }
 
-    const newTab = {
-      id: Date.now(),
-      title: new URL(finalUrl).hostname || finalUrl,
-      url: 'about:blank',
-      loading: false
-    };
-
-    setTabs([newTab]);
-    setActiveTabId(newTab.id);
-    setUrlInput('');
-    setIframeError(true); // immediately show the error screen
+    setTabs(prev => prev.map(t => 
+      t.id === activeTabId 
+        ? { ...t, url: finalUrl, title: new URL(finalUrl).hostname, loading: true }
+        : t
+    ));
     setLastRequestedUrl(finalUrl);
+
+    // Simulate loading
+    setTimeout(() => {
+      setTabs(prev => prev.map(t => 
+        t.id === activeTabId 
+          ? { ...t, loading: false }
+          : t
+      ));
+    }, 1000);
   };
 
   const handleSubmit = (e) => {
