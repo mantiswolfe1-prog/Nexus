@@ -4,7 +4,6 @@ import { ArrowLeft, Star, Clock, TrendingUp, Shuffle, Tag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from 'utils';
 import { useNavigateBack } from '../hooks/useNavigateBack.js';
-import { useNavigateBack } from '../hooks/useNavigateBack.js';
 import GlassCard from '../Components/UI/GlassCard.js';
 import NeonButton from '../Components/UI/NeonButton.js';
 import GameCard from '../Components/Games/GameCard.js';
