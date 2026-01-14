@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Star, Clock, TrendingUp, Shuffle, Tag } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from 'utils';
 import GlassCard from '../Components/UI/GlassCard.js';
 import NeonButton from '../Components/UI/NeonButton.js';
@@ -131,9 +131,490 @@ const SAMPLE_GAMES = [
     playTime: '15+ min',
     url: 'https://www.crazygames.com/game/drift-hunters'
   },
+  { 
+    id: 13, 
+    title: '1v1.LOL', 
+    thumbnail: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=225&fit=crop', 
+    tags: ['shooter', 'multiplayer', 'battle'], 
+    performance: 'high', 
+    source: 'poki', 
+    playTime: '10+ min',
+    url: 'https://poki.com/en/g/1v1-lol'
+  },
+  { 
+    id: 14, 
+    title: 'Krunker.io', 
+    thumbnail: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=225&fit=crop', 
+    tags: ['shooter', 'multiplayer', 'fps'], 
+    performance: 'high', 
+    source: 'crazygames', 
+    playTime: '15+ min',
+    url: 'https://www.crazygames.com/game/krunker-io'
+  },
+  { 
+    id: 15, 
+    title: 'Bloons TD 6', 
+    thumbnail: 'https://images.unsplash.com/photo-1534982841079-afde227ada8f?w=400&h=225&fit=crop', 
+    tags: ['strategy', 'tower-defense', 'casual'], 
+    performance: 'medium', 
+    source: 'poki', 
+    playTime: '20+ min',
+    url: 'https://poki.com/en/g/bloons-tower-defense'
+  },
+  { 
+    id: 16, 
+    title: 'Among Us', 
+    thumbnail: 'https://images.unsplash.com/photo-1614294148960-9aa740632a87?w=400&h=225&fit=crop', 
+    tags: ['multiplayer', 'social', 'mystery'], 
+    performance: 'low', 
+    source: 'crazygames', 
+    playTime: '10-15 min',
+    url: 'https://www.crazygames.com/game/among-us'
+  },
+  { 
+    id: 17, 
+    title: 'Agar.io', 
+    thumbnail: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=400&h=225&fit=crop', 
+    tags: ['arcade', 'io', 'casual'], 
+    performance: 'low', 
+    source: 'poki', 
+    playTime: '5-10 min',
+    url: 'https://poki.com/en/g/agario'
+  },
+  { 
+    id: 18, 
+    title: 'Slither.io', 
+    thumbnail: 'https://images.unsplash.com/photo-1516534775068-ba3e7458af70?w=400&h=225&fit=crop', 
+    tags: ['arcade', 'io', 'snake'], 
+    performance: 'low', 
+    source: 'poki', 
+    playTime: '10 min',
+    url: 'https://poki.com/en/g/slither-io'
+  },
+  { 
+    id: 19, 
+    title: 'Shell Shockers', 
+    thumbnail: 'https://images.unsplash.com/photo-1587132117816-8f8b60fa3fdf?w=400&h=225&fit=crop', 
+    tags: ['shooter', 'fps', 'funny'], 
+    performance: 'medium', 
+    source: 'crazygames', 
+    playTime: '10+ min',
+    url: 'https://www.crazygames.com/game/shell-shockers'
+  },
+  { 
+    id: 20, 
+    title: 'Stickman Hook', 
+    thumbnail: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=400&h=225&fit=crop', 
+    tags: ['arcade', 'skill', 'casual'], 
+    performance: 'low', 
+    source: 'poki', 
+    playTime: '5 min',
+    url: 'https://poki.com/en/g/stickman-hook'
+  },
+  { 
+    id: 21, 
+    title: 'Geometry Dash', 
+    thumbnail: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=225&fit=crop', 
+    tags: ['arcade', 'rhythm', 'skill'], 
+    performance: 'medium', 
+    source: 'coolmath', 
+    playTime: '5-10 min',
+    url: 'https://www.coolmathgames.com/0-geometry-dash'
+  },
+  { 
+    id: 22, 
+    title: 'Car Parking Multiplayer', 
+    thumbnail: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=400&h=225&fit=crop', 
+    tags: ['simulation', 'car', 'multiplayer'], 
+    performance: 'medium', 
+    source: 'crazygames', 
+    playTime: '15+ min',
+    url: 'https://www.crazygames.com/game/car-parking-multiplayer'
+  },
+  { 
+    id: 23, 
+    title: 'Tetris', 
+    thumbnail: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=225&fit=crop', 
+    tags: ['puzzle', 'classic', 'casual'], 
+    performance: 'low', 
+    source: 'poki', 
+    playTime: '10+ min',
+    url: 'https://poki.com/en/g/tetris'
+  },
+  { 
+    id: 24, 
+    title: 'BitLife', 
+    thumbnail: 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=400&h=225&fit=crop', 
+    tags: ['simulation', 'life-sim', 'text-based'], 
+    performance: 'low', 
+    source: 'crazygames', 
+    playTime: '20+ min',
+    url: 'https://www.crazygames.com/game/bitlife'
+  },
+  { 
+    id: 25, 
+    title: 'Friday Night Funkin', 
+    thumbnail: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&h=225&fit=crop', 
+    tags: ['rhythm', 'music', 'casual'], 
+    performance: 'medium', 
+    source: 'poki', 
+    playTime: '10 min',
+    url: 'https://poki.com/en/g/friday-night-funkin'
+  },
+  { 
+    id: 26, 
+    title: 'Retro Bowl', 
+    thumbnail: 'https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=400&h=225&fit=crop', 
+    tags: ['sports', 'football', 'retro'], 
+    performance: 'low', 
+    source: 'poki', 
+    playTime: '15+ min',
+    url: 'https://poki.com/en/g/retro-bowl'
+  },
+  { 
+    id: 27, 
+    title: 'Cookie Clicker', 
+    thumbnail: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=400&h=225&fit=crop', 
+    tags: ['clicker', 'idle', 'casual'], 
+    performance: 'low', 
+    source: 'coolmath', 
+    playTime: '30+ min',
+    url: 'https://orteil.dashnet.org/cookieclicker/'
+  },
+  { 
+    id: 28, 
+    title: 'Tunnel Rush', 
+    thumbnail: 'https://images.unsplash.com/photo-1617886903355-9354bb57751f?w=400&h=225&fit=crop', 
+    tags: ['arcade', '3d', 'skill'], 
+    performance: 'medium', 
+    source: 'poki', 
+    playTime: '5 min',
+    url: 'https://poki.com/en/g/tunnel-rush'
+  },
+  { 
+    id: 29, 
+    title: 'Paper.io 2', 
+    thumbnail: 'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=400&h=225&fit=crop', 
+    tags: ['io', 'strategy', 'casual'], 
+    performance: 'low', 
+    source: 'poki', 
+    playTime: '10 min',
+    url: 'https://poki.com/en/g/paper-io-2'
+  },
+  { 
+    id: 30, 
+    title: 'Bottle Flip 3D', 
+    thumbnail: 'https://images.unsplash.com/photo-1560343090-f0409e92791a?w=400&h=225&fit=crop', 
+    tags: ['casual', 'skill', '3d'], 
+    performance: 'low', 
+    source: 'poki', 
+    playTime: '5 min',
+    url: 'https://poki.com/en/g/bottle-flip-3d'
+  },
+  { 
+    id: 31, 
+    title: 'Crossy Road', 
+    thumbnail: 'https://images.unsplash.com/photo-1511882150382-421056c89033?w=400&h=225&fit=crop', 
+    tags: ['arcade', 'casual', 'endless'], 
+    performance: 'low', 
+    source: 'poki', 
+    playTime: '5-10 min',
+    url: 'https://poki.com/en/g/crossy-road'
+  },
+  { 
+    id: 32, 
+    title: 'Rocket League (Sideswipe)', 
+    thumbnail: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=225&fit=crop', 
+    tags: ['sports', 'car', 'soccer'], 
+    performance: 'high', 
+    source: 'crazygames', 
+    playTime: '10 min',
+    url: 'https://www.crazygames.com/game/rocket-league-sideswipe'
+  },
+  { 
+    id: 33, 
+    title: 'Flappy Bird', 
+    thumbnail: 'https://images.unsplash.com/photo-1552820728-8b83bb6b2b07?w=400&h=225&fit=crop', 
+    tags: ['arcade', 'casual', 'skill'], 
+    performance: 'low', 
+    source: 'poki', 
+    playTime: '5 min',
+    url: 'https://poki.com/en/g/flappy-bird'
+  },
+  { 
+    id: 34, 
+    title: 'Duck Life', 
+    thumbnail: 'https://images.unsplash.com/photo-1535268244629-727c0c2c8c21?w=400&h=225&fit=crop', 
+    tags: ['adventure', 'training', 'casual'], 
+    performance: 'low', 
+    source: 'coolmath', 
+    playTime: '15+ min',
+    url: 'https://www.coolmathgames.com/0-duck-life'
+  },
+  { 
+    id: 35, 
+    title: 'Minecraft Classic', 
+    thumbnail: 'https://images.unsplash.com/photo-1587408501332-0b70fccf4c15?w=400&h=225&fit=crop', 
+    tags: ['sandbox', 'creative', '3d'], 
+    performance: 'medium', 
+    source: 'crazygames', 
+    playTime: '30+ min',
+    url: 'https://classic.minecraft.net/'
+  },
+  { 
+    id: 36, 
+    title: 'Vex 5', 
+    thumbnail: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=400&h=225&fit=crop', 
+    tags: ['platformer', 'skill', 'action'], 
+    performance: 'low', 
+    source: 'coolmath', 
+    playTime: '10+ min',
+    url: 'https://www.coolmathgames.com/0-vex-5'
+  },
+  { 
+    id: 37, 
+    title: 'Stick War', 
+    thumbnail: 'https://images.unsplash.com/photo-1589241062272-c0a000072de8?w=400&h=225&fit=crop', 
+    tags: ['strategy', 'war', 'stickman'], 
+    performance: 'medium', 
+    source: 'crazygames', 
+    playTime: '20+ min',
+    url: 'https://www.crazygames.com/game/stick-war'
+  },
+  { 
+    id: 38, 
+    title: 'Color Switch', 
+    thumbnail: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=225&fit=crop', 
+    tags: ['arcade', 'skill', 'casual'], 
+    performance: 'low', 
+    source: 'poki', 
+    playTime: '5 min',
+    url: 'https://poki.com/en/g/color-switch'
+  },
+  { 
+    id: 39, 
+    title: 'Hill Climb Racing', 
+    thumbnail: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=225&fit=crop', 
+    tags: ['racing', 'physics', 'casual'], 
+    performance: 'low', 
+    source: 'poki', 
+    playTime: '10+ min',
+    url: 'https://poki.com/en/g/hill-climb-racing'
+  },
+  { 
+    id: 40, 
+    title: 'Brawl Stars', 
+    thumbnail: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=225&fit=crop', 
+    tags: ['action', 'multiplayer', 'battle'], 
+    performance: 'medium', 
+    source: 'crazygames', 
+    playTime: '10 min',
+    url: 'https://www.crazygames.com/game/brawl-stars'
+  },
+  { 
+    id: 41, 
+    title: 'Stumble Guys', 
+    thumbnail: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400&h=225&fit=crop', 
+    tags: ['battle-royale', 'multiplayer', 'funny'], 
+    performance: 'medium', 
+    source: 'poki', 
+    playTime: '10 min',
+    url: 'https://poki.com/en/g/stumble-guys'
+  },
+  { 
+    id: 42, 
+    title: 'Subway Clash 3D', 
+    thumbnail: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=225&fit=crop', 
+    tags: ['shooter', 'fps', '3d'], 
+    performance: 'high', 
+    source: 'crazygames', 
+    playTime: '10+ min',
+    url: 'https://www.crazygames.com/game/subway-clash-3d'
+  },
+  { 
+    id: 43, 
+    title: 'Soccer Skills', 
+    thumbnail: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=400&h=225&fit=crop', 
+    tags: ['sports', 'soccer', 'casual'], 
+    performance: 'low', 
+    source: 'poki', 
+    playTime: '5-10 min',
+    url: 'https://poki.com/en/g/soccer-skills-world-cup'
+  },
+  { 
+    id: 44, 
+    title: 'Idle Breakout', 
+    thumbnail: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=225&fit=crop', 
+    tags: ['idle', 'clicker', 'arcade'], 
+    performance: 'low', 
+    source: 'coolmath', 
+    playTime: '30+ min',
+    url: 'https://www.coolmathgames.com/0-idle-breakout'
+  },
+  { 
+    id: 45, 
+    title: 'Parking Fury 3D', 
+    thumbnail: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=400&h=225&fit=crop', 
+    tags: ['simulation', 'car', '3d'], 
+    performance: 'medium', 
+    source: 'crazygames', 
+    playTime: '10 min',
+    url: 'https://www.crazygames.com/game/parking-fury-3d'
+  },
+  { 
+    id: 46, 
+    title: 'Bubble Shooter', 
+    thumbnail: 'https://images.unsplash.com/photo-1535268244629-727c0c2c8c21?w=400&h=225&fit=crop', 
+    tags: ['puzzle', 'casual', 'match-3'], 
+    performance: 'low', 
+    source: 'poki', 
+    playTime: '10+ min',
+    url: 'https://poki.com/en/g/bubble-shooter'
+  },
+  { 
+    id: 47, 
+    title: 'Stack', 
+    thumbnail: 'https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=400&h=225&fit=crop', 
+    tags: ['arcade', 'skill', 'casual'], 
+    performance: 'low', 
+    source: 'poki', 
+    playTime: '5 min',
+    url: 'https://poki.com/en/g/stack'
+  },
+  { 
+    id: 48, 
+    title: 'Madalin Stunt Cars 2', 
+    thumbnail: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&h=225&fit=crop', 
+    tags: ['racing', 'car', '3d'], 
+    performance: 'high', 
+    source: 'crazygames', 
+    playTime: '15+ min',
+    url: 'https://www.crazygames.com/game/madalin-stunt-cars-2'
+  },
+  { 
+    id: 49, 
+    title: 'Run 2', 
+    thumbnail: 'https://images.unsplash.com/photo-1552820728-8b83bb6b2b07?w=400&h=225&fit=crop', 
+    tags: ['arcade', '3d', 'endless-runner'], 
+    performance: 'low', 
+    source: 'coolmath', 
+    playTime: '10+ min',
+    url: 'https://www.coolmathgames.com/0-run-2'
+  },
+  { 
+    id: 50, 
+    title: 'Pacman', 
+    thumbnail: 'https://images.unsplash.com/photo-1589241062272-c0a000072de8?w=400&h=225&fit=crop', 
+    tags: ['arcade', 'classic', 'retro'], 
+    performance: 'low', 
+    source: 'poki', 
+    playTime: '10 min',
+    url: 'https://poki.com/en/g/pacman'
+  },
+  { 
+    id: 51, 
+    title: 'Snake.io', 
+    thumbnail: 'https://images.unsplash.com/photo-1516534775068-ba3e7458af70?w=400&h=225&fit=crop', 
+    tags: ['io', 'snake', 'casual'], 
+    performance: 'low', 
+    source: 'poki', 
+    playTime: '5-10 min',
+    url: 'https://poki.com/en/g/snake-io'
+  },
+  { 
+    id: 52, 
+    title: 'Basketball Legends', 
+    thumbnail: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=225&fit=crop', 
+    tags: ['sports', 'basketball', 'multiplayer'], 
+    performance: 'medium', 
+    source: 'crazygames', 
+    playTime: '10 min',
+    url: 'https://www.crazygames.com/game/basketball-legends'
+  },
+  { 
+    id: 53, 
+    title: 'Subway Surfers 2', 
+    thumbnail: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=225&fit=crop', 
+    tags: ['arcade', 'endless-runner', 'action'], 
+    performance: 'medium', 
+    source: 'poki', 
+    playTime: '10+ min',
+    url: 'https://poki.com/en/g/subway-surfers-2'
+  },
+  { 
+    id: 54, 
+    title: 'Tank Trouble', 
+    thumbnail: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=225&fit=crop', 
+    tags: ['action', 'multiplayer', 'tank'], 
+    performance: 'low', 
+    source: 'crazygames', 
+    playTime: '5-10 min',
+    url: 'https://www.crazygames.com/game/tank-trouble'
+  },
+  { 
+    id: 55, 
+    title: 'Drift Boss', 
+    thumbnail: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&h=225&fit=crop', 
+    tags: ['racing', 'drift', 'skill'], 
+    performance: 'low', 
+    source: 'poki', 
+    playTime: '5 min',
+    url: 'https://poki.com/en/g/drift-boss'
+  },
+  { 
+    id: 56, 
+    title: 'Penalty Shooters 2', 
+    thumbnail: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=400&h=225&fit=crop', 
+    tags: ['sports', 'soccer', 'casual'], 
+    performance: 'low', 
+    source: 'poki', 
+    playTime: '5 min',
+    url: 'https://poki.com/en/g/penalty-shooters-2'
+  },
+  { 
+    id: 57, 
+    title: 'Rolling Sky', 
+    thumbnail: 'https://images.unsplash.com/photo-1617886903355-9354bb57751f?w=400&h=225&fit=crop', 
+    tags: ['arcade', '3d', 'rhythm'], 
+    performance: 'medium', 
+    source: 'poki', 
+    playTime: '10 min',
+    url: 'https://poki.com/en/g/rolling-sky'
+  },
+  { 
+    id: 58, 
+    title: 'Basketball Stars 2', 
+    thumbnail: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=225&fit=crop', 
+    tags: ['sports', 'basketball', 'multiplayer'], 
+    performance: 'medium', 
+    source: 'poki', 
+    playTime: '10 min',
+    url: 'https://poki.com/en/g/basketball-stars-2'
+  },
+  { 
+    id: 59, 
+    title: 'Getaway Shootout', 
+    thumbnail: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400&h=225&fit=crop', 
+    tags: ['action', 'funny', 'multiplayer'], 
+    performance: 'low', 
+    source: 'crazygames', 
+    playTime: '10 min',
+    url: 'https://www.crazygames.com/game/getaway-shootout'
+  },
+  { 
+    id: 60, 
+    title: 'Papa\'s Pizzeria', 
+    thumbnail: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=225&fit=crop', 
+    tags: ['simulation', 'cooking', 'casual'], 
+    performance: 'low', 
+    source: 'coolmath', 
+    playTime: '15+ min',
+    url: 'https://www.coolmathgames.com/0-papas-pizzeria'
+  },
 ];
 
 export default function Games() {
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [performance, setPerformance] = useState('all');
   const [selectedTags, setSelectedTags] = useState([]);
@@ -141,11 +622,13 @@ export default function Games() {
   const [activeTab, setActiveTab] = useState('all');
   const [activeSource, setActiveSource] = useState('all');
   const [playingGame, setPlayingGame] = useState(null);
+  const [settings, setSettings] = useState({ browser: { openLinksIn: 'nexus' } });
 
   const accentColor = '#ff6b6b';
 
   useEffect(() => {
     loadFavorites();
+    loadSettings();
   }, []);
 
   useEffect(() => {
@@ -166,6 +649,18 @@ export default function Games() {
       setFavorites(saved);
     } catch (err) {
       console.error('Failed to load favorites:', err);
+    }
+  };
+
+  const loadSettings = async () => {
+    try {
+      await storage.init();
+      const saved = await storage.loadSettings();
+      if (saved) {
+        setSettings(saved);
+      }
+    } catch (err) {
+      console.error('Failed to load settings:', err);
     }
   };
 
@@ -211,7 +706,15 @@ export default function Games() {
   };
 
   const playGame = (game) => {
-    setPlayingGame(game);
+    const openLinksIn = settings.browser?.openLinksIn || 'nexus';
+    
+    if (openLinksIn === 'external') {
+      // Open in external browser
+      window.open(game.url, '_blank', 'noopener,noreferrer');
+    } else {
+      // Open in Nexus browser
+      navigate('/browser', { state: { url: game.url } });
+    }
   };
 
   const tabs = [

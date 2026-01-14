@@ -7,6 +7,9 @@ import Auth from './PagesDisplay/Auth.js';
 import RegularDashboard from './PagesDisplay/RegularDashboard.js';
 import AdminDashboard from './PagesDisplay/AdminDashboard.js';
 import Settings from './PagesDisplay/Settings.js';
+import Updates from './PagesDisplay/Updates.js';
+import Analytics from './PagesDisplay/Analytics.js';
+import HabitTracker from './PagesDisplay/HabitTracker.js';
 import Games from './PagesDisplay/Games.js';
 import StudyTools from './PagesDisplay/StudyTools.js';
 import Music from './PagesDisplay/Music.js';
@@ -64,6 +67,9 @@ function App() {
             <Route path="/dashboard" element={<RegularDashboard />} />
             <Route path="/admindashboard" element={<AdminDashboard />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/updates" element={<Updates />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/habits" element={<HabitTracker />} />
             <Route path="/games" element={<Games />} />
             <Route path="/studytools" element={<StudyTools />} />
             <Route path="/music" element={<Music />} />

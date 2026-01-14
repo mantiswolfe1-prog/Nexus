@@ -1,20 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import KeyboardHandler from './Components/UI/KeyboardHandler.js';
 
 export default function Layout({ children, currentPageName }) {
-  // Handle panic mode with Escape key
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        window.location.href = 'https://www.google.com/search?q=math+homework+help';
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
   return (
     <div className="min-h-screen bg-[#0a0a0f]">
+      {/* Global Keyboard Shortcuts Handler */}
+      <KeyboardHandler />
+      
       <style>{`
         :root {
           --background: 0 0% 3.9%;

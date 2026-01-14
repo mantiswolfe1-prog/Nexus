@@ -21,18 +21,21 @@ import {
   AlertCircle,
   Eye,
   EyeOff,
-  Check
+  Check,
+  Globe
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { createPageUrl } from 'utils';
+import { createPageUrl } from '../utils.js';
 import NeonButton from '../Components/UI/NeonButton.js';
-import { Input } from '../Components/UI/input';
+import { Input } from '../Components/UI/input.js';
 import { storage, session } from '../Components/Storage/clientStorage.js';
 import SoftParticleDrift from '../Components/Backgrounds/SoftParticleDrift.js';
 import SettingsSection from '../Components/Settings/SettingsSection.js';
 import SettingControl from '../Components/Settings/SettingControl.js';
 import DeviceProfileManager from '../Components/Settings/DeviceProfileManager.js';
 import DiscordVerification from '../Components/Settings/DiscordVerification.js';
+
+const BUILD_VERSION = 'v1.0.0-beta';
 
 export default function Settings() {
   const [settings, setSettings] = useState({
@@ -41,7 +44,8 @@ export default function Settings() {
     performance: { targetFPS: 60, ramLimit: 1024, animationScale: 1, widgetLimit: 3, adaptivePerf: true, showFPS: false },
     games: { fullscreenOnLaunch: true, escToClose: true, lazyLoadStrength: 'medium' },
     widgets: { enabled: false, spotify: false, youtube: false, tiktok: false, autoDisable: true },
-    aiTools: { enabled: false, autoSuggest: true },
+    aiTools: { enabled: false, autoSuggest: true, personality: 'adaptive' },
+    browser: { openLinksIn: 'nexus', searchEngine: 'google' },
     lowEndMode: false
   });
   
@@ -388,6 +392,26 @@ export default function Settings() {
         ]
       },
       {
+        id: 'browser',
+        title: 'Browser Settings',
+        icon: Globe,
+        keywords: ['browser', 'links', 'open', 'external', 'nexus', 'search', 'engine'],
+        controls: [
+          { path: 'browser.openLinksIn', title: 'Open Links In', description: 'Where to open game & video links', type: 'dropdown', value: settings.browser?.openLinksIn || 'nexus', options: [
+            { value: 'nexus', label: 'Nexus Browser (Built-in)' },
+            { value: 'external', label: 'External Browser' }
+          ]},
+          { path: 'browser.searchEngine', title: 'Search Engine', description: 'Default search engine for queries', type: 'dropdown', value: settings.browser?.searchEngine || 'google', options: [
+            { value: 'google', label: 'Google' },
+            { value: 'duckduckgo', label: 'DuckDuckGo' },
+            { value: 'brave', label: 'Brave Search' },
+            { value: 'bing', label: 'Bing' },
+            { value: 'yahoo', label: 'Yahoo' },
+            { value: 'ecosia', label: 'Ecosia' }
+          ]}
+        ]
+      },
+      {
         id: 'widgets',
         title: 'Widgets',
         icon: Boxes,
@@ -404,10 +428,18 @@ export default function Settings() {
         id: 'ai',
         title: 'AI Tools',
         icon: Brain,
-        keywords: ['ai', 'assistant', 'suggest', 'chat'],
+        keywords: ['ai', 'assistant', 'suggest', 'chat', 'personality'],
         controls: [
           { path: 'aiTools.enabled', title: 'AI Assistant', description: 'Enable AI features', type: 'toggle', value: settings.aiTools.enabled },
-          { path: 'aiTools.autoSuggest', title: 'Auto Suggestions', description: 'AI-powered hints', type: 'toggle', value: settings.aiTools.autoSuggest }
+          { path: 'aiTools.autoSuggest', title: 'Auto Suggestions', description: 'AI-powered hints', type: 'toggle', value: settings.aiTools.autoSuggest },
+          { path: 'aiTools.personality', title: 'AI Personality Mode', description: 'How your AI assistant communicates', type: 'dropdown', value: settings.aiTools?.personality || 'adaptive', options: [
+            { value: 'adaptive', label: '🔄 Adaptive - Mirrors your style' },
+            { value: 'kind', label: '💚 Kind - Always encouraging' },
+            { value: 'moody', label: '😏 Moody - Witty and sarcastic' },
+            { value: 'professional', label: '💼 Professional - Direct and efficient' },
+            { value: 'mentor', label: '🎓 Mentor - Educational & detailed' },
+            { value: 'chill', label: '😎 Chill - Relaxed and friendly' }
+          ]}
         ]
       },
       {
@@ -422,18 +454,7 @@ export default function Settings() {
               <p className="text-white/70">{user?.username}</p>
             </div>
             <div className="p-4 rounded-xl bg-white/5">
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="text-white font-medium">Access Code</h4>
-                <NeonButton 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={regenerateAccessCode}
-                  disabled={regenerateCooldown > 0}
-                >
-                  <RefreshCw className="w-3 h-3 mr-1" />
-                  {regenerateCooldown > 0 ? `${regenerateCooldown}s` : 'Regenerate'}
-                </NeonButton>
-              </div>
+              <h4 className="text-white font-medium mb-2">Access Code</h4>
               <p className="text-white/70 font-mono text-sm">{accessCode}</p>
               <p className="text-white/40 text-xs mt-2">Save this code to log in again (5-20 chars)</p>
             </div>
@@ -548,10 +569,16 @@ export default function Settings() {
                 <p className="text-white/50">Customize your Nexus experience</p>
               </div>
             </div>
-            <NeonButton variant="primary" onClick={saveSettings}>
-              <Save className="w-4 h-4 mr-2" />
-              Save All
-            </NeonButton>
+            <div className="flex items-center gap-4">
+              <div className="text-right">
+                <p className="text-xs text-white/40">Build Version</p>
+                <p className="text-sm text-white/70 font-mono">{BUILD_VERSION}</p>
+              </div>
+              <NeonButton variant="primary" onClick={saveSettings}>
+                <Save className="w-4 h-4 mr-2" />
+                Save All
+              </NeonButton>
+            </div>
           </div>
 
           {/* Search Bar */}

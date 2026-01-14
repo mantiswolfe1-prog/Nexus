@@ -15,7 +15,10 @@ import {
   Clock,
   Star,
   Bell,
-  AlertTriangle
+  AlertTriangle,
+  Zap,
+  BarChart3,
+  Calendar
 } from 'lucide-react';
 import DashboardTile from '../Components/Dashboard/DashboardTile.js';
 import QuickActions from '../Components/Dashboard/QuickActions.js';
@@ -24,6 +27,7 @@ import { storage, session } from '../Components/Storage/clientStorage.js';
 import SoftParticleDrift from '../Components/Backgrounds/SoftParticleDrift.js';
 import FPSMonitor from '../Components/Performance/FPSMonitor.js';
 import { PerformanceProvider, usePerformance } from '../Components/Performance/PerformanceManager.js';
+import DashboardAI from '../Components/AI/DashboardAI.js';
 
 function DashboardContent() {
   const [user, setUser] = useState(null);
@@ -110,6 +114,17 @@ function DashboardContent() {
     return 'Good Evening';
   };
 
+  const recordTabClick = async (tabName) => {
+    try {
+      await storage.init();
+      const stats = (await storage.db.get('tabStats')) || {};
+      stats[tabName] = (stats[tabName] || 0) + 1;
+      await storage.db.put('tabStats', stats);
+    } catch (err) {
+      console.error('Failed to record tab click:', err);
+    }
+  };
+
   const tiles = [
     { 
       title: 'Games', 
@@ -166,6 +181,30 @@ function DashboardContent() {
       page: 'Settings',
       accent: '#00f0ff',
       stats: 'Settings'
+    },
+    { 
+      title: 'Updates', 
+      icon: Zap, 
+      description: 'What\'s new - features, games & AI tools',
+      page: 'Updates',
+      accent: '#ffd700',
+      stats: 'Changelog'
+    },
+    { 
+      title: 'Analytics', 
+      icon: BarChart3, 
+      description: 'Track your usage & see your habits',
+      page: 'Analytics',
+      accent: '#00d4ff',
+      stats: 'Data'
+    },
+    { 
+      title: 'Habits', 
+      icon: Calendar, 
+      description: 'Daily study checklist & streaks',
+      page: 'Habits',
+      accent: '#10b981',
+      stats: 'Streaks'
     },
     { 
       title: 'Utilities', 
@@ -332,7 +371,11 @@ function DashboardContent() {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ delay: 0.1 * index, type: 'spring', stiffness: 100 }}
               >
-                <Link to={createPageUrl(tile.page)} className="block h-full">
+                <Link 
+                  to={createPageUrl(tile.page)} 
+                  className="block h-full"
+                  onClick={() => recordTabClick(tile.page)}
+                >
                   <DashboardTile 
                     {...tile}
                     accentColor={tile.accent}
@@ -345,13 +388,24 @@ function DashboardContent() {
 
         {/* Footer */}
         <motion.footer 
-          className="mt-12 text-center text-white/30 text-sm"
+          className="mt-12 text-center text-white/30 text-sm space-y-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
         >
-          <p>Press <kbd className="px-2 py-1 rounded bg-white/10 text-white/50">Esc</kbd> for Panic Mode</p>
+          <p>
+            Press <kbd className="px-2 py-1 rounded bg-white/10 text-white/50 font-mono">?</kbd> to see all keyboard shortcuts
+          </p>
+          <p className="text-xs">
+            Quick: <kbd className="px-1.5 py-0.5 rounded bg-white/5 text-white/40 font-mono text-xs">P</kbd> Games · 
+            <kbd className="px-1.5 py-0.5 rounded bg-white/5 text-white/40 font-mono text-xs mx-1">S</kbd> Study · 
+            <kbd className="px-1.5 py-0.5 rounded bg-white/5 text-white/40 font-mono text-xs">M</kbd> Music · 
+            <kbd className="px-1.5 py-0.5 rounded bg-red-500/20 text-red-300/60 font-mono text-xs mx-1">ESC</kbd> Panic
+          </p>
         </motion.footer>
+
+        {/* AI Assistant */}
+        <DashboardAI accentColor={settings?.theme?.accent || '#a55eea'} />
       </div>
     </div>
   );

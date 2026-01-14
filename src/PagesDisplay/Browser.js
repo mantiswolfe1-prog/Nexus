@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowLeft, 
@@ -13,7 +13,7 @@ import {
   Globe,
   X
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from 'utils';
 import AnimatedBackground from '../Components/UI/AnimatedBackground.js';
 import GlassCard from '../Components/UI/GlassCard.js';
@@ -29,6 +29,7 @@ const DEFAULT_BOOKMARKS = [
 ];
 
 export default function Browser() {
+  const location = useLocation();
   const [tabs, setTabs] = useState([
     { id: 1, title: 'New Tab', url: '', loading: false }
   ]);
@@ -36,9 +37,44 @@ export default function Browser() {
   const [urlInput, setUrlInput] = useState('');
   const [bookmarks, setBookmarks] = useState(DEFAULT_BOOKMARKS);
   const [showBookmarks, setShowBookmarks] = useState(true);
+  const [settings, setSettings] = useState({ browser: { searchEngine: 'google' } });
 
   const accentColor = '#3498db';
   const activeTab = tabs.find(t => t.id === activeTabId);
+
+  // Search engine URLs
+  const searchEngines = {
+    google: 'https://www.google.com/search?q=',
+    duckduckgo: 'https://duckduckgo.com/?q=',
+    brave: 'https://search.brave.com/search?q=',
+    bing: 'https://www.bing.com/search?q=',
+    yahoo: 'https://search.yahoo.com/search?p=',
+    ecosia: 'https://www.ecosia.org/search?q='
+  };
+
+  useEffect(() => {
+    loadSettings();
+  }, []);
+
+  // Open URL from navigation state
+  useEffect(() => {
+    if (location.state?.url) {
+      navigateTo(location.state.url);
+    }
+  }, [location.state]);
+
+  const loadSettings = async () => {
+    try {
+      const { storage } = await import('../Components/Storage/clientStorage.js');
+      await storage.init();
+      const saved = await storage.loadSettings();
+      if (saved) {
+        setSettings(saved);
+      }
+    } catch (err) {
+      console.error('Failed to load settings:', err);
+    }
+  };
 
   const createTab = () => {
     const newTab = {
@@ -75,7 +111,10 @@ export default function Browser() {
       if (url.includes('.') && !url.includes(' ')) {
         finalUrl = 'https://' + url;
       } else {
-        finalUrl = `https://www.google.com/search?q=${encodeURIComponent(url)}`;
+        // Use selected search engine
+        const searchEngine = settings.browser?.searchEngine || 'google';
+        const searchUrl = searchEngines[searchEngine] || searchEngines.google;
+        finalUrl = `${searchUrl}${encodeURIComponent(url)}`;
       }
     }
 

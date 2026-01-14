@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Play, Tv, Film, Video } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from 'utils';
 import AnimatedBackground from '../Components/UI/AnimatedBackground.js';
 import GlassCard from '../Components/UI/GlassCard.js';
@@ -84,11 +84,30 @@ const VIDEO_SERVICES = [
 ];
 
 export default function Videos() {
+  const navigate = useNavigate();
   const [activeService, setActiveService] = useState(null);
   const [connectedServices, setConnectedServices] = useState(['youtube']);
   const [category, setCategory] = useState('all');
+  const [settings, setSettings] = useState({ browser: { openLinksIn: 'nexus' } });
 
   const accentColor = '#ff9f43';
+
+  useEffect(() => {
+    loadSettings();
+  }, []);
+
+  const loadSettings = async () => {
+    try {
+      const { storage } = await import('../Components/Storage/clientStorage.js');
+      await storage.init();
+      const saved = await storage.loadSettings();
+      if (saved) {
+        setSettings(saved);
+      }
+    } catch (err) {
+      console.error('Failed to load settings:', err);
+    }
+  };
 
   const categories = [
     { id: 'all', label: 'All Services', icon: Tv },
@@ -101,9 +120,16 @@ export default function Videos() {
   );
 
   const launchService = (service) => {
-    if (service.type === 'external') {
-      window.open(service.url, '_blank');
+    const openLinksIn = settings.browser?.openLinksIn || 'nexus';
+    
+    if (service.type === 'external' || openLinksIn === 'external') {
+      // Open in external browser
+      window.open(service.url, '_blank', 'noopener,noreferrer');
+    } else if (openLinksIn === 'nexus') {
+      // Open in Nexus browser
+      navigate('/browser', { state: { url: service.url } });
     } else {
+      // Fallback to embedded iframe
       setActiveService(service);
     }
   };

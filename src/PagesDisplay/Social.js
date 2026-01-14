@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowLeft, 
@@ -9,7 +9,7 @@ import {
   Check,
   X as CloseIcon
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from 'utils';
 import AnimatedBackground from '../Components/UI/AnimatedBackground.js';
 import GlassCard from '../Components/UI/GlassCard.js';
@@ -79,10 +79,29 @@ const SAMPLE_ACTIVITY = [
 ];
 
 export default function Social() {
+  const navigate = useNavigate();
   const [activeService, setActiveService] = useState(null);
   const [services, setServices] = useState(SOCIAL_SERVICES);
+  const [settings, setSettings] = useState({ browser: { openLinksIn: 'nexus' } });
 
   const accentColor = '#5865f2';
+
+  useEffect(() => {
+    loadSettings();
+  }, []);
+
+  const loadSettings = async () => {
+    try {
+      const { storage } = await import('../Components/Storage/clientStorage.js');
+      await storage.init();
+      const saved = await storage.loadSettings();
+      if (saved) {
+        setSettings(saved);
+      }
+    } catch (err) {
+      console.error('Failed to load settings:', err);
+    }
+  };
 
   const toggleConnection = (serviceId) => {
     setServices(prev => prev.map(s => 
@@ -263,7 +282,14 @@ export default function Social() {
                     <div className="flex gap-2">
                       <NeonButton 
                         variant="ghost"
-                        onClick={() => window.open(activeService.url, '_blank')}
+                        onClick={() => {
+                          const openLinksIn = settings.browser?.openLinksIn || 'nexus';
+                          if (openLinksIn === 'external') {
+                            window.open(activeService.url, '_blank', 'noopener,noreferrer');
+                          } else {
+                            navigate('/browser', { state: { url: activeService.url } });
+                          }
+                        }}
                       >
                         <ExternalLink className="w-4 h-4 mr-2" />
                         Open in New Tab
