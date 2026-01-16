@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RotateCcw, ChevronLeft, ChevronRight, Check, X, Plus } from 'lucide-react';
-import GlassCard from '../UI/GlassCard';
-import NeonButton from '../UI/NeonButton';
-import { Button } from '../UI/button';
-import { Input } from '../UI/input';
-import { Textarea } from '../UI/textarea';
+import GlassCard from '../UI/GlassCard.js';
+import NeonButton from '../UI/NeonButton.js';
+import { Button } from '../UI/button.js';
+import { Input } from '../UI/input.js';
+import { Textarea } from '../UI/textarea.js';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../UI/dialog";
+} from "../UI/dialog.js";
 
 const SAMPLE_CARDS = [
   { id: 1, question: 'What is the formula for the area of a circle?', answer: 'A = πr²', difficulty: 'easy' },

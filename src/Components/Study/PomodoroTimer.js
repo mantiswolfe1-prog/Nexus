@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Pause, RotateCcw, Coffee, Brain } from 'lucide-react';
-import GlassCard from '../UI/GlassCard';
-import NeonButton from '../UI/NeonButton';
+import GlassCard from '../UI/GlassCard.js';
+import NeonButton from '../UI/NeonButton.js';
 
 export default function PomodoroTimer({ accentColor = '#a55eea' }) {
   const [mode, setMode] = useState('focus'); // focus, break

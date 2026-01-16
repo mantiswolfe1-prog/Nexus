@@ -21,7 +21,7 @@ import AnimatedBackground from '../Components/UI/AnimatedBackground.js';
 import GlassCard from '../Components/UI/GlassCard.js';
 import NeonButton from '../Components/UI/NeonButton.js';
 import BrowserTab from '../Components/Browser/BrowserTab.js';
-import { Input } from '../Components/UI/input';
+import { Input } from '../Components/UI/input.js';
 
 const DEFAULT_BOOKMARKS = [
   { id: 1, title: 'Startpage', url: 'https://www.startpage.com', favicon: 'https://www.startpage.com/favicon.ico' },
