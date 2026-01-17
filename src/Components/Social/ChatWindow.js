@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Hash, Smile, Plus, Image as ImageIcon, Trash2, Edit2, Reply, MoreVertical, Bell, BellOff } from 'lucide-react';
 import { session } from '../Storage/clientStorage.js';
-import { Message } from '../../../Entities/Message';
+import { Message } from '../../entities/Message.js';
 
 const STORAGE_KEY = 'nexus_messages';
 const CHANNELS_KEY = 'nexus_channels';

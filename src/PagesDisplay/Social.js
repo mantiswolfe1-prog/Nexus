@@ -21,7 +21,7 @@ import AnimatedBackground from '../Components/UI/AnimatedBackground.js';
 import GlassCard from '../Components/UI/GlassCard.js';
 import NeonButton from '../Components/UI/NeonButton.js';
 import ChatWindow from '../Components/Social/ChatWindow.js';
-import { Channel } from '../../Entities/Message';
+import { Channel } from '../entities/Message.js';
 
 const SOCIAL_SERVICES = [
   { 
