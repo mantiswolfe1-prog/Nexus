@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Search, Sparkles, Bell } from 'lucide-react';
 import { createPageUrl } from 'utils';
@@ -15,6 +15,7 @@ export default function Layout({ children, currentPageName }) {
   const [searchInput, setSearchInput] = useState('');
   const [searchMode, setSearchMode] = useState('browser'); // 'browser' or 'ai'
   const [lastActivity, setLastActivity] = useState(Date.now());
+  const lastActivityRef = useRef(Date.now());
   const [notificationCenterOpen, setNotificationCenterOpen] = useState(false);
   const [activeToasts, setActiveToasts] = useState([]);
   const [showDecoy, setShowDecoy] = useState(false);
@@ -141,11 +142,13 @@ export default function Layout({ children, currentPageName }) {
     };
   }, [showDecoy]);
   
-  // Monitor for admin kicks
+  // Monitor for admin kicks, bans, and timeouts
   useEffect(() => {
     // Track user activity
     const handleActivity = () => {
-      setLastActivity(Date.now());
+      const now = Date.now();
+      lastActivityRef.current = now;
+      setLastActivity(now);
     };
     
     // Listen for user activity
@@ -160,14 +163,10 @@ export default function Layout({ children, currentPageName }) {
         const kicked = kickList.find(k => k.sessionId === sessionId);
         
         if (kicked) {
-          // User has been kicked - crash the page
+          // User has been kicked
           localStorage.removeItem('nexus_kick_list');
           sessionStorage.clear();
-          // Force crash by throwing error and redirecting
-          setTimeout(() => {
-            throw new Error('Session terminated by administrator');
-          }, 100);
-          window.location.href = 'about:blank';
+          window.location.href = createPageUrl('Landing');
         }
       } catch (err) {
         console.error('Kick check failed:', err);
@@ -227,7 +226,7 @@ export default function Layout({ children, currentPageName }) {
     // Check for session timeout (30 minutes of inactivity)
     const checkTimeout = () => {
       const TIMEOUT_DURATION = 30 * 60 * 1000; // 30 minutes
-      const inactive = Date.now() - lastActivity;
+      const inactive = Date.now() - lastActivityRef.current;
       
       if (inactive > TIMEOUT_DURATION) {
         alert('Your session has expired due to inactivity. Please login again.');
@@ -260,7 +259,7 @@ export default function Layout({ children, currentPageName }) {
       window.removeEventListener('click', handleActivity);
       window.removeEventListener('scroll', handleActivity);
     };
-  }, [sessionId, lastActivity, navigate]);
+  }, [sessionId, navigate]);
   
   // Don't show search bar on Browser or StudyTools page
   const isBrowserPage = location.pathname.includes('/browser');
@@ -284,7 +283,7 @@ export default function Layout({ children, currentPageName }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f]" style={{ paddingLeft: shouldHideUI ? 0 : sidebarWidth }}>
+    <div className="min-h-screen bg-[#1a1a2e]" style={{ paddingLeft: shouldHideUI ? 0 : sidebarWidth }}>
       {/* Global Keyboard Shortcuts Handler */}
       {!shouldHideUI && <KeyboardHandler />}
       {/* Opera-style Sidebar */}
