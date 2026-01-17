@@ -283,7 +283,7 @@ export default function Layout({ children, currentPageName }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#1a1a2e]" style={{ paddingLeft: shouldHideUI ? 0 : sidebarWidth }}>
+    <div className="min-h-screen bg-[#2a2a3e]" style={{ paddingLeft: shouldHideUI ? 0 : sidebarWidth }}>
       {/* Global Keyboard Shortcuts Handler */}
       {!shouldHideUI && <KeyboardHandler />}
       {/* Opera-style Sidebar */}

@@ -15,15 +15,6 @@
         // Load the app with embedded=true parameter
         const iframe = document.getElementById('app');
         iframe.src = window.location.origin + '/index.html?embedded=true';
-        
-        // Change the URL to about:blank after a brief delay
-        setTimeout(() => {
-            try {
-                history.replaceState(null, '', 'about:blank');
-            } catch (e) {
-                // Can't change to about:blank - continue anyway
-            }
-        }, 100);
     </script>
 </body>
 </html>

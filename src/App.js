@@ -59,6 +59,8 @@ class ErrorBoundary extends Component {
 function App() {
   const [showErrorScreen, setShowErrorScreen] = useState(() => {
     const params = new URLSearchParams(window.location.search);
+    // Only show error screen if embedded=true
+    // Don't use sessionStorage - each iframe load should show it fresh
     return params.has('embedded');
   });
 
@@ -67,7 +69,9 @@ function App() {
     return (
       <ErrorBoundary>
         <AccessibilityProvider>
-          <FakeErrorScreen onDismiss={() => setShowErrorScreen(false)} />
+          <FakeErrorScreen onDismiss={() => {
+            setShowErrorScreen(false);
+          }} />
         </AccessibilityProvider>
       </ErrorBoundary>
     );
