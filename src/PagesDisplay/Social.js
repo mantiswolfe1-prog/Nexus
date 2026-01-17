@@ -301,18 +301,6 @@ export default function Social() {
     </div>
   );
 }
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <div className="flex items-center gap-4 mb-6">
-            <NeonButton variant="ghost" size="icon" onClick={goBack}>
-              <ArrowLeft className="w-5 h-5" />
-            </NeonButton>
-            <div>
-              <h1 className="text-3xl font-bold text-white">Social</h1>
-              <p className="text-white/50">Connect with friends & communities</p>
-            </div>
-          </div>
         </motion.header>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
