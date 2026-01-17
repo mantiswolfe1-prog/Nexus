@@ -4,7 +4,7 @@ import { Shield, Download, ArrowRight, MessageCircle, Bug } from 'lucide-react';
 import NeonButton from '../Components/UI/NeonButton.js';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils.js';
-import useSettings from '../hooks/useSettings.js';
+import { useSettings } from '../hooks/useSettings.js';
 
 export default function Landing() {
   const [loading, setLoading] = useState(false);
