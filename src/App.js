@@ -57,23 +57,25 @@ class ErrorBoundary extends Component {
 }
 
 function App() {
-  const [showErrorScreen, setShowErrorScreen] = useState(true);
-
-  // Check if we're in embedded mode - if so, show error screen initially
-  useEffect(() => {
+  const [showErrorScreen, setShowErrorScreen] = useState(() => {
     const params = new URLSearchParams(window.location.search);
-    const isEmbedded = params.has('embedded');
-    
-    // Show error screen only when embedded (coming from about:blank redirect)
-    if (!isEmbedded) {
-      setShowErrorScreen(false);
-    }
-  }, []);
+    return params.has('embedded');
+  });
+
+  // If error screen is showing, don't render the app at all
+  if (showErrorScreen) {
+    return (
+      <ErrorBoundary>
+        <AccessibilityProvider>
+          <FakeErrorScreen onDismiss={() => setShowErrorScreen(false)} />
+        </AccessibilityProvider>
+      </ErrorBoundary>
+    );
+  }
 
   return (
     <ErrorBoundary>
       <AccessibilityProvider>
-        {showErrorScreen && <FakeErrorScreen onDismiss={() => setShowErrorScreen(false)} />}
         <Router>
           <Layout>
             <Routes>
