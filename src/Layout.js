@@ -86,12 +86,11 @@ export default function Layout({ children, currentPageName }) {
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
-  // Boss Key and Idle Decoy Mode
+  // Boss Key Handler
   useEffect(() => {
     const settings = JSON.parse(localStorage.getItem('nexus_settings') || '{}');
     const stealthSettings = settings.stealth || {};
     
-    // Boss Key Handler
     const handleBossKey = (e) => {
       if (!stealthSettings.bossKeyEnabled) return;
       
@@ -102,19 +101,27 @@ export default function Layout({ children, currentPageName }) {
       }
     };
 
-    // Idle Decoy Handler
+    document.addEventListener('keydown', handleBossKey);
+    return () => document.removeEventListener('keydown', handleBossKey);
+  }, []);
+
+  // Idle Decoy Mode
+  useEffect(() => {
+    const settings = JSON.parse(localStorage.getItem('nexus_settings') || '{}');
+    const stealthSettings = settings.stealth || {};
+    
+    if (!stealthSettings.idleDecoyEnabled || showDecoy) return;
+
     let idleTimeout;
     const resetIdleTimer = () => {
       setLastActivity(Date.now());
       clearTimeout(idleTimeout);
       
-      if (stealthSettings.idleDecoyEnabled && !showDecoy) {
-        const timeoutMinutes = stealthSettings.idleDecoyTimeout || 3;
-        idleTimeout = setTimeout(() => {
-          setShowDecoy(true);
-          setDecoyReason('idle');
-        }, timeoutMinutes * 60 * 1000);
-      }
+      const timeoutMinutes = stealthSettings.idleDecoyTimeout || 3;
+      idleTimeout = setTimeout(() => {
+        setShowDecoy(true);
+        setDecoyReason('idle');
+      }, timeoutMinutes * 60 * 1000);
     };
 
     // Activity listeners
@@ -122,9 +129,6 @@ export default function Layout({ children, currentPageName }) {
     activityEvents.forEach(event => {
       window.addEventListener(event, resetIdleTimer);
     });
-
-    // Boss key listener
-    document.addEventListener('keydown', handleBossKey);
 
     // Initialize idle timer
     resetIdleTimer();
@@ -134,7 +138,6 @@ export default function Layout({ children, currentPageName }) {
       activityEvents.forEach(event => {
         window.removeEventListener(event, resetIdleTimer);
       });
-      document.removeEventListener('keydown', handleBossKey);
     };
   }, [showDecoy]);
   

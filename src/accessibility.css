@@ -489,11 +489,6 @@ button, a, input, select, textarea {
 }
 
 /* Prevent Autoplay */
-.no-autoplay video,
-.no-autoplay audio {
-  autoplay: false;
-}
-
 .no-autoplay video[autoplay],
 .no-autoplay audio[autoplay] {
   display: none;
