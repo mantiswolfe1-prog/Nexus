@@ -3,13 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from 'utils';
 import { useSettings } from '../../hooks/useSettings.js';
 import { Home, Globe, Gamepad2, Brain, Settings as Cog, ChevronsLeft, ChevronsRight } from 'lucide-react';
-import SpotifyWidget from '../Widgets/SpotifyWidget.js';
-import YouTubeWidget from '../Widgets/YouTubeWidget.js';
 
 export default function Sidebar({ onWidthChange }) {
   const navigate = useNavigate();
   const { settings } = useSettings();
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
 
   const width = expanded ? 260 : 72;
 
@@ -24,8 +22,6 @@ export default function Sidebar({ onWidthChange }) {
     { key: 'study', label: 'Study Tools', icon: Brain, to: 'StudyTools' },
     { key: 'settings', label: 'Settings', icon: Cog, to: 'Settings' },
   ]), []);
-
-  const showWidgets = settings.widgets?.enabled && settings.widgets?.dockInSidebar;
 
   return (
     <aside
@@ -62,39 +58,8 @@ export default function Sidebar({ onWidthChange }) {
           ))}
         </nav>
 
-        {/* Widgets */}
-        {showWidgets && (
-          <div className="mt-2 border-t border-white/10">
-            <div className={`${expanded ? 'px-3' : 'px-2'} py-2 text-white/50 text-xs uppercase tracking-wide`}>Widgets</div>
-            <div className={`${expanded ? 'px-3' : 'px-2'} space-y-3 pb-3`}>
-              {settings.widgets.spotify && (
-                <div className="rounded-xl bg-white/5 border border-white/10 p-3">
-                  {expanded ? (
-                    <SpotifyWidget />
-                  ) : (
-                    <div className="flex items-center justify-center text-green-400">
-                      Spotify
-                    </div>
-                  )}
-                </div>
-              )}
-              {settings.widgets.youtube && (
-                <div className="rounded-xl bg-white/5 border border-white/10 p-3">
-                  {expanded ? (
-                    <YouTubeWidget />
-                  ) : (
-                    <div className="flex items-center justify-center text-red-400">
-                      YouTube
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
         <div className="mt-auto p-3 text-white/40 text-xs">
-          {expanded ? 'Opera-style sidebar • Always available' : 'Sidebar'}
+          {expanded ? 'Quick Navigation' : 'Nav'}
         </div>
       </div>
     </aside>

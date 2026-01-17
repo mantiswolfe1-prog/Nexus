@@ -7,14 +7,16 @@ import { Label } from '../UI/label.js';
 export default function SettingControl({ 
   title, 
   description, 
-  type, // 'toggle', 'slider', 'dropdown', 'color'
+  type, // 'toggle', 'slider', 'dropdown', 'color', 'text'
   value, 
   onChange,
   min,
   max,
   step = 1,
   options = [],
-  suffix = ''
+  suffix = '',
+  formatValue,
+  placeholder = ''
 }) {
   return (
     <div className="flex items-start justify-between gap-6 p-4 rounded-xl bg-white/5 hover:bg-white/[0.07] transition-colors">
@@ -29,7 +31,9 @@ export default function SettingControl({
         {type === 'slider' && (
           <div className="w-full">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-white text-sm font-mono">{value}{suffix}</span>
+              <span className="text-white text-sm font-mono">
+                {formatValue ? formatValue(value) : `${value}${suffix}`}
+              </span>
             </div>
             <Slider
               value={[value]}
@@ -63,6 +67,15 @@ export default function SettingControl({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             className="w-12 h-12 rounded-lg cursor-pointer border-2 border-white/20"
+          />
+        )}
+        {type === 'text' && (
+          <input
+            type="text"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder}
+            className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-white/30 transition-colors w-48"
           />
         )}
       </div>

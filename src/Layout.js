@@ -1,19 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Search, Sparkles } from 'lucide-react';
+import { Search, Sparkles, Bell } from 'lucide-react';
 import { createPageUrl } from 'utils';
 import { session, storage } from './Components/Storage/clientStorage.js';
 import KeyboardHandler from './Components/UI/KeyboardHandler.js';
 import WidgetsOverlay from './Components/Widgets/WidgetsOverlay.js';
 import Sidebar from './Components/UI/Sidebar.js';
+import { useNotifications, NotificationCenter, NotificationToast } from './Components/Notifications/NotificationCenter.js';
+import ScheduleTracker from './Components/Schedule/ScheduleTracker.js';
+import DecoyScreen from './Components/Stealth/DecoyScreen.js';
+import { AnimatePresence } from 'framer-motion';
 
 export default function Layout({ children, currentPageName }) {
   const [searchInput, setSearchInput] = useState('');
   const [searchMode, setSearchMode] = useState('browser'); // 'browser' or 'ai'
   const [lastActivity, setLastActivity] = useState(Date.now());
+  const [notificationCenterOpen, setNotificationCenterOpen] = useState(false);
+  const [activeToasts, setActiveToasts] = useState([]);
+  const [showDecoy, setShowDecoy] = useState(false);
+  const [decoyReason, setDecoyReason] = useState('idle');
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarWidth, setSidebarWidth] = useState(72);
+  const notifications = useNotifications();
+
+  // Expose notifications globally
+  useEffect(() => {
+    window.nexusNotifications = {
+      show: (notification) => {
+        const newNotif = notifications.addNotification(notification);
+        setActiveToasts(prev => [...prev, newNotif]);
+      }
+    };
+    return () => {
+      delete window.nexusNotifications;
+    };
+  }, [notifications]);
+
   const [sessionId] = useState(() => {
     // Generate unique session ID
     const existing = sessionStorage.getItem('nexus_session_id');
@@ -22,6 +45,98 @@ export default function Layout({ children, currentPageName }) {
     sessionStorage.setItem('nexus_session_id', newId);
     return newId;
   });
+
+  // Tab title and favicon morphing for stealth
+  useEffect(() => {
+    const getFakeTitle = () => {
+      try {
+        const settings = JSON.parse(localStorage.getItem('nexus_settings') || '{}');
+        return settings.accessibility?.fakeTabName || 'IXL - Math Practice';
+      } catch {
+        return 'IXL - Math Practice';
+      }
+    };
+
+    const originalTitle = 'Nexus - Student Hub';
+    const originalFavicon = '/favicon.ico';
+    
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // Tab is not active - disguise it
+        const fakeTitle = getFakeTitle();
+        document.title = fakeTitle;
+        // Change favicon to neutral study icon
+        const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+        link.rel = 'icon';
+        link.href = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="70" font-size="70" text-anchor="middle" fill="%23333">📚</text></svg>';
+        if (!document.querySelector("link[rel*='icon']")) {
+          document.head.appendChild(link);
+        }
+      } else {
+        // Tab is active - show real title
+        document.title = originalTitle;
+        const link = document.querySelector("link[rel*='icon']");
+        if (link) {
+          link.href = originalFavicon;
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
+
+  // Boss Key and Idle Decoy Mode
+  useEffect(() => {
+    const settings = JSON.parse(localStorage.getItem('nexus_settings') || '{}');
+    const stealthSettings = settings.stealth || {};
+    
+    // Boss Key Handler
+    const handleBossKey = (e) => {
+      if (!stealthSettings.bossKeyEnabled) return;
+      
+      if (e.key === '`' || e.key === '~') {
+        e.preventDefault();
+        setShowDecoy(prev => !prev);
+        setDecoyReason('bosskey');
+      }
+    };
+
+    // Idle Decoy Handler
+    let idleTimeout;
+    const resetIdleTimer = () => {
+      setLastActivity(Date.now());
+      clearTimeout(idleTimeout);
+      
+      if (stealthSettings.idleDecoyEnabled && !showDecoy) {
+        const timeoutMinutes = stealthSettings.idleDecoyTimeout || 3;
+        idleTimeout = setTimeout(() => {
+          setShowDecoy(true);
+          setDecoyReason('idle');
+        }, timeoutMinutes * 60 * 1000);
+      }
+    };
+
+    // Activity listeners
+    const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+    activityEvents.forEach(event => {
+      window.addEventListener(event, resetIdleTimer);
+    });
+
+    // Boss key listener
+    document.addEventListener('keydown', handleBossKey);
+
+    // Initialize idle timer
+    resetIdleTimer();
+
+    return () => {
+      clearTimeout(idleTimeout);
+      activityEvents.forEach(event => {
+        window.removeEventListener(event, resetIdleTimer);
+      });
+      document.removeEventListener('keydown', handleBossKey);
+    };
+  }, [showDecoy]);
   
   // Monitor for admin kicks
   useEffect(() => {
@@ -223,6 +338,24 @@ export default function Layout({ children, currentPageName }) {
                   }`}
                 />
               </div>
+
+              {/* Schedule Tracker */}
+              <ScheduleTracker />
+
+              {/* Notification Bell */}
+              <button
+                type="button"
+                onClick={() => setNotificationCenterOpen(true)}
+                className="relative p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+                title="Notifications"
+              >
+                <Bell className="w-5 h-5 text-white" />
+                {notifications.unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {notifications.unreadCount > 9 ? '9+' : notifications.unreadCount}
+                  </span>
+                )}
+              </button>
             </form>
           </div>
         </div>
@@ -287,6 +420,41 @@ export default function Layout({ children, currentPageName }) {
           animation: pulse-glow 2s ease-in-out infinite;
         }
       `}</style>
+      
+      {/* Notification Center Modal */}
+      <NotificationCenter
+        isOpen={notificationCenterOpen}
+        onClose={() => setNotificationCenterOpen(false)}
+        notifications={notifications.notifications}
+        onMarkAsRead={notifications.markAsRead}
+        onMarkAllAsRead={notifications.markAllAsRead}
+        onDelete={notifications.deleteNotification}
+        onClearAll={notifications.clearAll}
+      />
+      
+      {/* Toast Notifications (bottom right) */}
+      <div className="fixed bottom-4 right-4 z-50 space-y-2 pointer-events-none">
+        <div className="pointer-events-auto">
+          <AnimatePresence>
+            {activeToasts.map(toast => (
+              <NotificationToast
+                key={toast.id}
+                notification={toast}
+                onDismiss={() => setActiveToasts(prev => prev.filter(t => t.id !== toast.id))}
+              />
+            ))}
+          </AnimatePresence>
+        </div>
+      </div>
+      
+      {/* Decoy Screen Overlay (Boss Key or Idle) */}
+      {showDecoy && (
+        <DecoyScreen 
+          onDismiss={() => setShowDecoy(false)} 
+          reason={decoyReason}
+        />
+      )}
+      
       {children}
     </div>
   );

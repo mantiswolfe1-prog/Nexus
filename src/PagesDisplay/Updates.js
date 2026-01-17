@@ -9,6 +9,63 @@ import SoftParticleDrift from '../Components/Backgrounds/SoftParticleDrift.js';
 
 const updates = [
   {
+    version: 'v0.10.0-beta',
+    date: 'January 17, 2026',
+    type: 'major',
+    highlights: [
+      {
+        icon: Shield,
+        title: 'Stealth Mode Suite',
+        description: 'Boss Key (` key) for instant cover, Idle Decoy auto-shows fake homework, Tab Disguise changes name when not focused',
+        category: 'Privacy'
+      },
+      {
+        icon: Calendar,
+        title: 'Class Schedule Tracker',
+        description: 'Add your class periods, see current class in top bar, get notifications before class ends',
+        category: 'Feature'
+      },
+      {
+        icon: Brain,
+        title: 'Smart Notifications',
+        description: 'Toast popups (5s auto-dismiss), Notification Center modal, persistent history, chat integration',
+        category: 'Feature'
+      },
+      {
+        icon: Sparkles,
+        title: 'About:Blank Protection',
+        description: 'Real URL redirects to about:blank with fake 404, press C to launch app in iframe, GoGuardian-safe',
+        category: 'Privacy'
+      }
+    ],
+    improvements: [
+      'Boss Key (backtick) toggles fake Google Classroom/IXL overlay instantly',
+      'Idle Decoy Mode shows homework screen after 2-5 min inactivity',
+      'Tab name morphs to "Google Classroom" or "IXL" when not focused',
+      'Schedule tracker shows "Current: Math | 23 min left" in top bar',
+      'Notifications before class ends (customizable 1-15 min)',
+      'Add unlimited class periods with custom names and times',
+      'Toast notifications in bottom-right corner',
+      'Notification Center with full history (last 50)',
+      'Unread count badge on bell icon',
+      'Chat messages trigger notifications when tab hidden',
+      'Global window.nexusNotifications API',
+      'Browser detection for authentic fake 404 (Chrome vs Google style)',
+      'About:blank launcher with embedded iframe',
+      'React-rendered fake error screen (client-side)',
+      'Customizable panic return timeout with HH:MM display',
+      'Tab disguise dropdown with 10 realistic options',
+      'Stealth settings section with all privacy controls'
+    ],
+    bugFixes: [
+      'Fixed panic button not saving timestamp correctly',
+      'Fixed localStorage expiration check edge cases',
+      'Fixed dropdown scrolling for accessibility options',
+      'Fixed sidebar widgets docking issues'
+    ],
+    breaking: []
+  },
+  {
     version: 'v0.9.5-beta',
     date: 'January 16, 2026',
     type: 'minor',

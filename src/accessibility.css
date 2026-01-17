@@ -1,0 +1,500 @@
+/* Accessibility & Customization Styles */
+
+/* ========== COLORBLIND MODES ========== */
+.colorblind-deuteranopia {
+  filter: url('#deuteranopia-filter');
+}
+
+.colorblind-protanopia {
+  filter: url('#protanopia-filter');
+}
+
+.colorblind-tritanopia {
+  filter: url('#tritanopia-filter');
+}
+
+.colorblind-achromatopsia {
+  filter: grayscale(100%) contrast(1.2);
+}
+
+/* Inline SVG filters for colorblind simulation */
+.colorblind-deuteranopia::before,
+.colorblind-protanopia::before,
+.colorblind-tritanopia::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Simplified colorblind adjustments using CSS */
+.colorblind-deuteranopia {
+  --red: #b88a00;
+  --green: #7c7c00;
+}
+
+.colorblind-protanopia {
+  --red: #8a8a00;
+  --green: #6b6b00;
+}
+
+.colorblind-tritanopia {
+  --blue: #00b8b8;
+  --yellow: #ff6b6b;
+}
+
+/* ========== CURSOR CUSTOMIZATION ========== */
+[data-cursor-size="large"] {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36"><path d="M6 6 L30 30 M6 30 L30 6" stroke="white" stroke-width="3" fill="none"/></svg>') 18 18, auto;
+}
+
+[data-cursor-size="xlarge"] {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"><path d="M8 8 L40 40 M8 40 L40 8" stroke="white" stroke-width="4" fill="none"/></svg>') 24 24, auto;
+}
+
+.cursor-highlight {
+  cursor: none !important;
+}
+
+.cursor-highlight::after {
+  content: '';
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--accent-color, #00f0ff);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  animation: pulse-cursor 2s ease-in-out infinite;
+}
+
+@keyframes pulse-cursor {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+/* ========== READING SUPPORT ========== */
+.reading-ruler * {
+  position: relative;
+}
+
+.reading-ruler p:hover,
+.reading-ruler div:hover {
+  background: rgba(0, 240, 255, 0.1) !important;
+  box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.3);
+}
+
+[data-line-height="compact"] * {
+  line-height: 1.4 !important;
+}
+
+[data-line-height="normal"] * {
+  line-height: 1.6 !important;
+}
+
+[data-line-height="relaxed"] * {
+  line-height: 1.8 !important;
+}
+
+[data-line-height="loose"] * {
+  line-height: 2.0 !important;
+}
+
+.focus-mode > *:not(:hover):not(:focus-within) {
+  opacity: 0.3;
+  filter: blur(2px);
+  transition: all 0.3s ease;
+}
+
+.focus-mode > *:hover,
+.focus-mode > *:focus-within {
+  opacity: 1;
+  filter: blur(0);
+  z-index: 10;
+}
+
+.bionic-reading p::first-letter,
+.bionic-reading span::first-letter,
+.bionic-reading strong,
+.bionic-reading b {
+  font-weight: 800 !important;
+  color: var(--accent-color, #00f0ff);
+}
+
+.reading-guide {
+  cursor: none;
+}
+
+.reading-guide::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, var(--accent-color, #00f0ff), transparent);
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.5;
+  left: var(--mouse-x, 50%);
+}
+
+/* ========== LINK UNDERLINES ========== */
+.link-underlines a,
+.link-underlines button[role="link"] {
+  text-decoration: underline !important;
+  text-decoration-thickness: 2px !important;
+  text-underline-offset: 3px !important;
+}
+
+/* ========== ICON LABELS ========== */
+.icon-labels button[aria-label]::after,
+.icon-labels a[aria-label]::after {
+  content: attr(aria-label);
+  margin-left: 8px;
+  font-size: 0.875rem;
+}
+
+/* ========== ONE-HANDED MODE ========== */
+.one-handed-mode {
+  --sidebar-side: right;
+}
+
+.one-handed-mode aside {
+  left: auto !important;
+  right: 0 !important;
+}
+
+.one-handed-mode .floating-widgets {
+  right: auto !important;
+  left: 20px !important;
+}
+
+/* ========== SIMPLIFIED UI ========== */
+.simplified-ui .decoration,
+.simplified-ui .accent-element,
+.simplified-ui [class*="particle"],
+.simplified-ui .background-animation {
+  display: none !important;
+}
+
+.simplified-ui * {
+  border-radius: 4px !important;
+  box-shadow: none !important;
+}
+
+/* ========== PHOTOSENSITIVE MODE ========== */
+.photosensitive-mode *[class*="flash"],
+.photosensitive-mode *[class*="blink"],
+.photosensitive-mode *[class*="strobe"] {
+  animation: none !important;
+}
+
+.photosensitive-mode video,
+.photosensitive-mode .animated-gif {
+  filter: brightness(0.8) contrast(0.9);
+}
+
+/* ========== EMERGENCY PAUSE ========== */
+.emergency-paused,
+.emergency-paused * {
+  animation-play-state: paused !important;
+  transition: none !important;
+}
+
+.emergency-paused video,
+.emergency-paused audio {
+  display: none !important;
+}
+
+/* ========== TEXT SELECTION ========== */
+::selection {
+  background: var(--selection-color, #00f0ff);
+  color: #000;
+}
+
+::-moz-selection {
+  background: var(--selection-color, #00f0ff);
+  color: #000;
+}
+
+/* ========== STICKY KEYS INDICATOR ========== */
+.sticky-keys[data-shift-held="true"]::before {
+  content: 'SHIFT';
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--accent-color);
+  color: #000;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  z-index: 99999;
+}
+
+/* ========== CLICK ASSIST ========== */
+.click-assist *:hover {
+  outline: 2px dashed var(--accent-color);
+  outline-offset: 4px;
+}
+
+/* ========== ORIGINAL STYLES (kept from previous version) ========== */
+
+/* High Contrast Mode */
+.high-contrast {
+  --text-primary: #ffffff !important;
+  --text-secondary: #e0e0e0 !important;
+  filter: contrast(1.2);
+}
+
+.high-contrast * {
+  border-color: currentColor !important;
+}
+
+/* No Blur */
+.no-blur * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* No Transparency */
+.no-transparency *[class*="bg-white/"],
+.no-transparency *[class*="bg-black/"] {
+  background-color: rgba(0, 0, 0, 0.9) !important;
+}
+
+.reduced-transparency *[class*="bg-white/"],
+.reduced-transparency *[class*="bg-black/"] {
+  opacity: 1 !important;
+}
+
+/* Layout Density */
+[data-density="compact"] {
+  --spacing-unit: 0.5rem;
+  --padding-unit: 0.75rem;
+  --text-base: 0.875rem;
+  --icon-size: 1rem;
+}
+
+[data-density="default"] {
+  --spacing-unit: 1rem;
+  --padding-unit: 1rem;
+  --text-base: 1rem;
+  --icon-size: 1.25rem;
+}
+
+[data-density="comfortable"] {
+  --spacing-unit: 1.5rem;
+  --padding-unit: 1.5rem;
+  --text-base: 1.125rem;
+  --icon-size: 1.5rem;
+  min-height: 44px;
+}
+
+[data-density="comfortable"] button,
+[data-density="comfortable"] a {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.75rem 1.5rem;
+}
+
+/* Motion & Animations */
+.no-animations,
+.no-animations * {
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+}
+
+.reduced-motion,
+.reduced-motion * {
+  animation-duration: 0.1s !important;
+  transition-duration: 0.1s !important;
+}
+
+/* Grayscale Mode */
+.grayscale-mode {
+  filter: grayscale(100%);
+}
+
+/* Dyslexia-Friendly Font */
+@import url('https://cdn.jsdelivr.net/npm/opendyslexic@1.0.0/opendyslexic-regular.woff2');
+
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('https://cdn.jsdelivr.net/npm/opendyslexic@1.0.0/opendyslexic-regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.dyslexia-font,
+.dyslexia-font * {
+  font-family: 'OpenDyslexic', sans-serif !important;
+  letter-spacing: 0.05em;
+  word-spacing: 0.1em;
+  line-height: 1.8;
+}
+
+/* Large Text */
+.large-text {
+  font-size: 125% !important;
+}
+
+.large-text * {
+  font-size: inherit;
+}
+
+/* Enhanced Focus Indicators */
+.enhanced-focus *:focus,
+.enhanced-focus *:focus-visible {
+  outline: 3px solid var(--accent-color, #00f0ff) !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 4px rgba(0, 240, 255, 0.3) !important;
+}
+
+.enhanced-focus button:focus,
+.enhanced-focus a:focus,
+.enhanced-focus input:focus,
+.enhanced-focus select:focus,
+.enhanced-focus textarea:focus {
+  outline: 3px solid var(--accent-color, #00f0ff) !important;
+  outline-offset: 2px !important;
+}
+
+/* Reduced Transparency (override bg-white/X classes) */
+.reduced-transparency *[style*="opacity"] {
+  opacity: 1 !important;
+}
+
+/* Screen Reader Optimizations */
+.screen-reader-optimized .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.screen-reader-optimized *[aria-hidden="true"] {
+  display: none;
+}
+
+.screen-reader-optimized button,
+.screen-reader-optimized a {
+  position: relative;
+}
+
+.screen-reader-optimized button::after,
+.screen-reader-optimized a::after {
+  content: attr(aria-label);
+  position: absolute;
+  left: -9999px;
+}
+
+/* Skip to Content Link */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--accent-color);
+  color: #000;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 9999;
+  border-radius: 0 0 4px 0;
+  font-weight: bold;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* Context Menu Disabled */
+.no-context-menu {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Scroll Speed */
+html {
+  scroll-behavior: smooth;
+}
+
+[data-scroll-speed] {
+  scroll-behavior: smooth;
+}
+
+/* Light Mode Specific */
+[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #e5e5e5;
+  --text-primary: #000000;
+  --text-secondary: #666666;
+  --border-color: #d0d0d0;
+}
+
+/* AMOLED Mode Specific */
+[data-theme="amoled"] {
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
+  --bg-tertiary: #1a1a1a;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --border-color: #333333;
+}
+
+/* Ensure all interactive elements meet WCAG AA standards */
+button, a, input, select, textarea {
+  min-height: 24px;
+  min-width: 24px;
+}
+
+/* Improved target sizes for touch */
+@media (pointer: coarse) {
+  button, a, input[type="checkbox"], input[type="radio"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Keyboard Navigation Improvements */
+*:focus-visible {
+  outline: 2px solid var(--accent-color, #00f0ff);
+  outline-offset: 2px;
+}
+
+/* Ensure sufficient color contrast */
+.text-white\/40,
+.text-white\/50 {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.high-contrast .text-white\/40,
+.high-contrast .text-white\/50,
+.high-contrast .text-white\/60,
+.high-contrast .text-white\/70 {
+  color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Prevent Autoplay */
+.no-autoplay video,
+.no-autoplay audio {
+  autoplay: false;
+}
+
+.no-autoplay video[autoplay],
+.no-autoplay audio[autoplay] {
+  display: none;
+}

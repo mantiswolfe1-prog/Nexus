@@ -1,0 +1,140 @@
+.fake-error-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+    padding: 20px;
+    z-index: 9999;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+.fake-error-screen .error-container {
+    text-align: center;
+    max-width: 600px;
+}
+
+.fake-error-screen .error-code {
+    font-size: 120px;
+    font-weight: 300;
+    color: #dadce0;
+    line-height: 1;
+    margin-bottom: 10px;
+}
+
+.fake-error-screen .error-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: #202124;
+    margin-bottom: 8px;
+}
+
+.fake-error-screen .error-message {
+    font-size: 14px;
+    color: #5f6368;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.fake-error-screen .suggestions {
+    margin: 30px 0;
+    font-size: 13px;
+    color: #5f6368;
+}
+
+.fake-error-screen .suggestions-title {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #202124;
+}
+
+.fake-error-screen ul {
+    list-style: none;
+    text-align: left;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.fake-error-screen li {
+    margin: 5px 0;
+}
+
+.fake-error-screen a {
+    color: #1f73e7;
+    text-decoration: none;
+}
+
+.fake-error-screen a:hover {
+    text-decoration: underline;
+}
+
+.fake-error-screen .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-top: 1px solid #dadce0;
+    text-align: center;
+    font-size: 12px;
+    color: #70757a;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.fake-error-screen .footer a {
+    color: #70757a;
+}
+
+/* Chrome-style error screen */
+.fake-error-screen.chrome {
+    background: #f2f2f2;
+}
+
+.fake-error-screen.chrome .error-container {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.fake-error-screen.chrome .error-code {
+    font-size: 96px;
+    color: #e74c3c;
+    margin-bottom: 15px;
+}
+
+.fake-error-screen.chrome .error-title {
+    font-size: 28px;
+    color: #333;
+}
+
+.fake-error-screen.chrome .error-message {
+    margin-bottom: 25px;
+}
+
+.fake-error-screen.chrome .suggestions {
+    display: none;
+}
+
+.fake-error-screen.chrome .footer {
+    display: none;
+}
+
+.robot-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    display: none;
+}
+
+.fake-error-screen.chrome .robot-icon {
+    display: block;
+}

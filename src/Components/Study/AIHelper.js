@@ -1,14 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Sparkles, Loader2, BookOpen, Calculator, FileText, Code } from 'lucide-react';
+import { Send, Sparkles, Loader2, BookOpen, Calculator, FileText, Code, AlertCircle } from 'lucide-react';
 import GlassCard from '../UI/GlassCard.js';
 import { Input } from '../UI/input.js';
+import { storage } from '../Storage/clientStorage.js';
 
 export default function AIHelper({ accentColor = '#a55eea' }) {
   const [query, setQuery] = useState('');
   const [response, setResponse] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [mode, setMode] = useState('explain'); // explain, solve, summarize, code
+  const [aiSettings, setAiSettings] = useState(null);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      const settings = await storage.loadSettings();
+      setAiSettings(settings?.aiTools);
+    };
+    loadSettings();
+  }, []);
 
   const modes = [
     { id: 'explain', label: 'Explain', icon: BookOpen },
@@ -45,19 +56,125 @@ export default function AIHelper({ accentColor = '#a55eea' }) {
     return modeResponses[Math.floor(Math.random() * modeResponses.length)];
   };
 
+  const callRealAI = async (query, mode) => {
+    if (!aiSettings || aiSettings.apiProvider === 'none' || !aiSettings.apiKey) {
+      return { success: false, useTemplate: true };
+    }
+
+    const modePrompts = {
+      explain: `Explain the following concept in a clear, educational way for a student: ${query}`,
+      solve: `Help a student solve this problem by providing step-by-step guidance (don't give the answer directly): ${query}`,
+      summarize: `Provide a concise summary of: ${query}`,
+      code: `Explain this programming concept or help with this code question: ${query}`
+    };
+
+    const systemPrompt = `You are a helpful study assistant. Be encouraging, educational, and never do homework for students - guide them instead.`;
+
+    try {
+      let apiUrl, headers, body;
+
+      if (aiSettings.apiProvider === 'openai') {
+        apiUrl = 'https://api.openai.com/v1/chat/completions';
+        headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${aiSettings.apiKey}`
+        };
+        body = JSON.stringify({
+          model: aiSettings.model || 'gpt-3.5-turbo',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: modePrompts[mode] }
+          ],
+          temperature: 0.7,
+          max_tokens: 500
+        });
+      } else if (aiSettings.apiProvider === 'anthropic') {
+        apiUrl = 'https://api.anthropic.com/v1/messages';
+        headers = {
+          'Content-Type': 'application/json',
+          'x-api-key': aiSettings.apiKey,
+          'anthropic-version': '2023-06-01'
+        };
+        body = JSON.stringify({
+          model: aiSettings.model || 'claude-3-sonnet-20240229',
+          max_tokens: 500,
+          messages: [
+            { role: 'user', content: `${systemPrompt}\n\n${modePrompts[mode]}` }
+          ]
+        });
+      } else if (aiSettings.apiProvider === 'google') {
+        apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${aiSettings.model || 'gemini-pro'}:generateContent?key=${aiSettings.apiKey}`;
+        headers = {
+          'Content-Type': 'application/json'
+        };
+        body = JSON.stringify({
+          contents: [{
+            parts: [{ text: `${systemPrompt}\n\n${modePrompts[mode]}` }]
+          }]
+        });
+      }
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers,
+        body
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('AI API Error:', errorData);
+        return { success: false, error: `API Error: ${response.status}` };
+      }
+
+      const data = await response.json();
+      
+      let content;
+      if (aiSettings.apiProvider === 'openai') {
+        content = data.choices[0]?.message?.content;
+      } else if (aiSettings.apiProvider === 'anthropic') {
+        content = data.content[0]?.text;
+      } else if (aiSettings.apiProvider === 'google') {
+        content = data.candidates[0]?.content?.parts[0]?.text;
+      }
+
+      return { success: true, content };
+    } catch (err) {
+      console.error('AI API Call Failed:', err);
+      return { success: false, error: err.message };
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!query.trim()) return;
 
     setIsLoading(true);
     setResponse('');
+    setError('');
 
-    // Simulate response delay
-    setTimeout(() => {
-      const result = generateResponse(query, mode);
-      setResponse(result);
+    // Try to call real AI first if configured
+    const aiResult = await callRealAI(query, mode);
+    
+    if (aiResult.success) {
+      setResponse(aiResult.content);
       setIsLoading(false);
-    }, 1500);
+    } else if (aiResult.useTemplate) {
+      // No API configured, use template responses
+      setTimeout(() => {
+        const result = generateResponse(query, mode);
+        setResponse(result);
+        setIsLoading(false);
+      }, 1500);
+    } else {
+      // API call failed, show error and fall back to template
+      setError(`AI unavailable: ${aiResult.error || 'Unknown error'}`);
+      setTimeout(() => {
+        const result = generateResponse(query, mode);
+        setResponse(result);
+        setIsLoading(false);
+        setTimeout(() => setError(''), 3000); // Clear error after 3s
+      }, 1500);
+    }
   };
 
   const quickPrompts = [
@@ -93,6 +210,14 @@ export default function AIHelper({ accentColor = '#a55eea' }) {
           </motion.button>
         ))}
       </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 flex items-start gap-2">
+          <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+          <span className="text-xs text-red-300">{error}</span>
+        </div>
+      )}
 
       {/* Quick Prompts */}
       {!response && !isLoading && (

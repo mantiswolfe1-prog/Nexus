@@ -23,7 +23,14 @@ import {
   EyeOff,
   Check,
   Globe,
-  Zap
+  Zap,
+  Accessibility,
+  Layout,
+  MousePointer,
+  Sparkles,
+  Clock,
+  Plus,
+  Trash2 as TrashIcon
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils.js';
@@ -37,17 +44,105 @@ import SettingControl from '../Components/Settings/SettingControl.js';
 import DeviceProfileManager from '../Components/Settings/DeviceProfileManager.js';
 import DiscordVerification from '../Components/Settings/DiscordVerification.js';
 
-const BUILD_VERSION = 'v0.9.5-beta';
+const BUILD_VERSION = 'v0.10.0-beta';
 
 export default function Settings() {
   const [settings, setSettings] = useState({
-    theme: { background: '#0a0a0f', accent: '#00f0ff', text: '#ffffff' },
+    theme: { 
+      mode: 'dark', // light, dark, amoled
+      background: '#0a0a0f', 
+      accent: '#00f0ff', 
+      text: '#ffffff',
+      contrast: 'normal', // normal, high
+      blur: true,
+      transparency: true
+    },
     background: { type: 'soft-particle-drift', particleCount: 50, speed: 0.5, opacity: 0.4, blur: 2 },
+    layout: {
+      density: 'default', // compact, default, comfortable
+    },
+    motion: {
+      animations: 'full', // full, reduced, none
+    },
+    input: {
+      holdToConfirm: false,
+      contextMenus: true,
+      scrollSpeed: 1,
+    },
+    accessibility: {
+      // Vision
+      grayscale: false,
+      colorblindMode: 'none',
+      cursorSize: 'normal',
+      cursorHighlight: false,
+      linkUnderlines: false,
+      iconLabels: false,
+      textSelectionColor: '#00f0ff',
+      // Reading
+      dyslexiaFont: false,
+      readingRuler: false,
+      lineHeight: 'normal',
+      focusMode: false,
+      bionicReading: false,
+      readingGuide: false,
+      largeText: false,
+      // Audio
+      soundEffects: false,
+      screenReaderAnnouncements: true,
+      alertTones: true,
+      reducedSound: false,
+      // Timing
+      extendedTimeout: false,
+      breakReminders: false,
+      breakInterval: 25,
+      timeLimitWarnings: true,
+      globalPause: false,
+      // Input
+      stickyKeys: false,
+      clickAssist: false,
+      clickDelay: 1000,
+      oneHandedMode: false,
+      // Cognitive
+      simplifiedUI: false,
+      plainLanguage: false,
+      extraConfirmations: true,
+      undoBuffer: true,
+      // Safety & Panic
+      photosensitiveMode: false,
+      autoplayControl: true,
+      panicButton: true,
+      panicSite: 'classroom',
+      panicReturnTimeout: 60,
+      fakeTabName: 'IXL | Math, Language Arts, Science, Social Studies, and Spanish',
+      // General
+      focusIndicators: true,
+      reducedTransparency: false,
+      screenReaderOptimized: false
+    },
     performance: { targetFPS: 60, ramLimit: 1024, animationScale: 1, widgetLimit: 3, adaptivePerf: true, showFPS: false },
     games: { fullscreenOnLaunch: true, escToClose: true, lazyLoadStrength: 'medium' },
     widgets: { enabled: true, spotify: true, youtube: true, tiktok: false, autoDisable: true, dockInSidebar: true },
-    aiTools: { enabled: false, autoSuggest: true, personality: 'adaptive' },
+    aiTools: { 
+      enabled: false, 
+      autoSuggest: true, 
+      personality: 'adaptive',
+      apiProvider: 'none',
+      apiKey: '',
+      model: 'gpt-3.5-turbo'
+    },
     browser: { openLinksIn: 'nexus', searchEngine: 'startpage' },
+    schedule: {
+      enabled: false,
+      showInTopBar: true,
+      notifyBeforeEnd: 5,
+      periods: []
+    },
+    stealth: {
+      idleDecoyEnabled: false,
+      idleDecoyTimeout: 3,
+      bossKeyEnabled: true,
+      bossKey: '`'
+    },
     lowEndMode: false
   });
   
@@ -482,11 +577,185 @@ export default function Settings() {
         id: 'theme',
         title: 'Theme & Colors',
         icon: Palette,
-        keywords: ['color', 'background', 'accent', 'text', 'theme'],
+        keywords: ['color', 'theme', 'accent', 'background', 'appearance', 'dark', 'light', 'amoled', 'contrast'],
         controls: [
-          { path: 'theme.background', title: 'Background Color', description: 'Main page background', type: 'color', value: settings.theme.background },
-          { path: 'theme.accent', title: 'Accent/Hover Color', description: 'Buttons and highlights', type: 'color', value: settings.theme.accent },
-          { path: 'theme.text', title: 'Text Color', description: 'Primary text color', type: 'color', value: settings.theme.text }
+          { path: 'theme.mode', title: 'Theme Mode', description: 'Overall color scheme', type: 'dropdown', value: settings.theme.mode, options: [
+            { value: 'light', label: '☀️ Light - Bright & airy' },
+            { value: 'dark', label: '🌙 Dark - Easy on eyes' },
+            { value: 'amoled', label: '⚫ AMOLED - Pure black' }
+          ]},
+          { path: 'theme.accent', title: 'Accent Color', description: 'Buttons, links & highlights', type: 'dropdown', value: settings.theme.accent, options: [
+            { value: '#00f0ff', label: '🔵 Cyan (Default)' },
+            { value: '#a55eea', label: '🟣 Purple' },
+            { value: '#26de81', label: '🟢 Green' },
+            { value: '#fc5c65', label: '🔴 Red' },
+            { value: '#fd9644', label: '🟠 Orange' },
+            { value: '#fed330', label: '🟡 Yellow' },
+            { value: '#45aaf2', label: '🔵 Blue' },
+            { value: '#f368e0', label: '🟣 Pink' }
+          ]},
+          { path: 'theme.contrast', title: 'Contrast Level', description: 'Text & UI contrast', type: 'dropdown', value: settings.theme.contrast, options: [
+            { value: 'normal', label: 'Normal - Balanced' },
+            { value: 'high', label: 'High - Maximum readability' }
+          ]},
+          { path: 'theme.blur', title: 'Blur Effects', description: 'Glassmorphism blur', type: 'toggle', value: settings.theme.blur },
+          { path: 'theme.transparency', title: 'Transparency', description: 'Semi-transparent UI', type: 'toggle', value: settings.theme.transparency }
+        ]
+      },
+      {
+        id: 'layout',
+        title: 'Layout & Density',
+        icon: Layout,
+        keywords: ['layout', 'density', 'spacing', 'compact', 'comfortable', 'padding'],
+        controls: [
+          { path: 'layout.density', title: 'Layout Density', description: 'Spacing & element size', type: 'dropdown', value: settings.layout.density, options: [
+            { value: 'compact', label: 'Compact - Tight spacing, more content' },
+            { value: 'default', label: 'Default - Balanced' },
+            { value: 'comfortable', label: 'Comfortable - Touch-friendly, spacious' }
+          ]}
+        ]
+      },
+      {
+        id: 'motion',
+        title: 'Motion & Animations',
+        icon: Sparkles,
+        keywords: ['animation', 'motion', 'transition', 'reduced', 'accessibility'],
+        controls: [
+          { path: 'motion.animations', title: 'Animation Level', description: 'UI motion & transitions', type: 'dropdown', value: settings.motion.animations, options: [
+            { value: 'full', label: 'Full - Smooth animations' },
+            { value: 'reduced', label: 'Reduced - Minimal motion' },
+            { value: 'none', label: 'None - Instant transitions' }
+          ]}
+        ]
+      },
+      {
+        id: 'input',
+        title: 'Input & Interaction',
+        icon: MousePointer,
+        keywords: ['input', 'mouse', 'keyboard', 'interaction', 'scroll', 'confirm'],
+        controls: [
+          { path: 'input.holdToConfirm', title: 'Hold to Confirm', description: 'Require holding for destructive actions', type: 'toggle', value: settings.input.holdToConfirm },
+          { path: 'input.contextMenus', title: 'Context Menus', description: 'Enable right-click menus', type: 'toggle', value: settings.input.contextMenus },
+          { path: 'input.scrollSpeed', title: 'Scroll Speed', description: 'Scrolling sensitivity', type: 'slider', value: settings.input.scrollSpeed, min: 0.5, max: 2, step: 0.1 }
+        ]
+      },
+      {
+        id: 'accessibility',
+        title: 'Accessibility',
+        icon: Accessibility,
+        keywords: ['accessibility', 'a11y', 'disability', 'dyslexia', 'grayscale', 'screen reader', 'focus', 'inclusive', 'colorblind', 'reading', 'audio', 'cognitive'],
+        controls: [
+          // Visual Assistance
+          { path: 'accessibility.grayscale', title: '🎨 Grayscale Mode', description: 'Remove all colors (focus aid)', type: 'toggle', value: settings.accessibility?.grayscale },
+          { path: 'accessibility.colorblindMode', title: '🌈 Colorblind Filter', description: 'Adjust colors for color vision deficiency', type: 'dropdown', value: settings.accessibility?.colorblindMode || 'none', options: [
+            { value: 'none', label: 'None - Standard colors' },
+            { value: 'deuteranopia', label: 'Deuteranopia (Red-Green)' },
+            { value: 'protanopia', label: 'Protanopia (Red-Weak)' },
+            { value: 'tritanopia', label: 'Tritanopia (Blue-Yellow)' },
+            { value: 'achromatopsia', label: 'Achromatopsia (Complete)' }
+          ]},
+          { path: 'accessibility.cursorSize', title: '🖱️ Cursor Size', description: 'Make cursor easier to see', type: 'dropdown', value: settings.accessibility?.cursorSize || 'normal', options: [
+            { value: 'normal', label: 'Normal' },
+            { value: 'large', label: 'Large (1.5x)' },
+            { value: 'xlarge', label: 'Extra Large (2x)' }
+          ]},
+          { path: 'accessibility.cursorHighlight', title: '⭕ Cursor Highlight', description: 'Circle around cursor for visibility', type: 'toggle', value: settings.accessibility?.cursorHighlight },
+          { path: 'accessibility.linkUnderlines', title: '🔗 Always Underline Links', description: 'Show underlines on all links', type: 'toggle', value: settings.accessibility?.linkUnderlines },
+          { path: 'accessibility.iconLabels', title: '🏷️ Always Show Labels', description: 'Text labels on icon buttons', type: 'toggle', value: settings.accessibility?.iconLabels },
+          
+          // Reading Support
+          { path: 'accessibility.dyslexiaFont', title: '📖 Dyslexia-Friendly Font', description: 'OpenDyslexic for easier reading', type: 'toggle', value: settings.accessibility?.dyslexiaFont },
+          { path: 'accessibility.readingRuler', title: '📏 Reading Ruler', description: 'Highlight current line', type: 'toggle', value: settings.accessibility?.readingRuler },
+          { path: 'accessibility.lineHeight', title: '📐 Line Spacing', description: 'Space between text lines', type: 'dropdown', value: settings.accessibility?.lineHeight || 'normal', options: [
+            { value: 'compact', label: 'Compact (1.4)' },
+            { value: 'normal', label: 'Normal (1.6)' },
+            { value: 'relaxed', label: 'Relaxed (1.8)' },
+            { value: 'loose', label: 'Loose (2.0)' }
+          ]},
+          { path: 'accessibility.focusMode', title: '🎯 Focus Mode', description: 'Hide distractions, show current content', type: 'toggle', value: settings.accessibility?.focusMode },
+          { path: 'accessibility.bionicReading', title: '⚡ Bionic Reading', description: 'Bold first letters for faster scanning', type: 'toggle', value: settings.accessibility?.bionicReading },
+          { path: 'accessibility.readingGuide', title: '📍 Reading Guide', description: 'Vertical line following cursor', type: 'toggle', value: settings.accessibility?.readingGuide },
+          { path: 'accessibility.largeText', title: '🔤 Large Text', description: 'Increase all text sizes (125%)', type: 'toggle', value: settings.accessibility?.largeText },
+          
+          // Audio & Feedback
+          { path: 'accessibility.soundEffects', title: '🔊 Sound Effects', description: 'Audio feedback for actions', type: 'toggle', value: settings.accessibility?.soundEffects },
+          { path: 'accessibility.screenReaderAnnouncements', title: '📢 Live Announcements', description: 'Announce dynamic content changes', type: 'toggle', value: settings.accessibility?.screenReaderAnnouncements },
+          { path: 'accessibility.alertTones', title: '🔔 Alert Tones', description: 'Different sounds for notifications', type: 'toggle', value: settings.accessibility?.alertTones },
+          { path: 'accessibility.reducedSound', title: '🔉 Reduce Sound', description: 'Lower volume for UI sounds', type: 'toggle', value: settings.accessibility?.reducedSound },
+          
+          // Timing & Breaks
+          { path: 'accessibility.extendedTimeout', title: '⏱️ Extended Timeout', description: 'Disable auto-logout timeouts', type: 'toggle', value: settings.accessibility?.extendedTimeout },
+          { path: 'accessibility.breakReminders', title: '☕ Break Reminders', description: 'Pomodoro-style rest notifications', type: 'toggle', value: settings.accessibility?.breakReminders },
+          { path: 'accessibility.breakInterval', title: '⏲️ Break Interval', description: 'Minutes between break reminders', type: 'slider', value: settings.accessibility?.breakInterval || 25, min: 15, max: 90, step: 5, suffix: ' min' },
+          { path: 'accessibility.timeLimitWarnings', title: '⚠️ Timeout Warnings', description: 'Alert before auto-logout', type: 'toggle', value: settings.accessibility?.timeLimitWarnings },
+          
+          // Input Alternatives
+          { path: 'accessibility.stickyKeys', title: '🔐 Sticky Keys', description: 'Hold modifiers without holding', type: 'toggle', value: settings.accessibility?.stickyKeys },
+          { path: 'accessibility.clickAssist', title: '👆 Click Assist', description: 'Auto-click on hover after delay', type: 'toggle', value: settings.accessibility?.clickAssist },
+          { path: 'accessibility.clickDelay', title: '⏳ Click Delay', description: 'Hover time before auto-click', type: 'slider', value: settings.accessibility?.clickDelay || 1000, min: 500, max: 3000, step: 100, suffix: ' ms' },
+          { path: 'accessibility.oneHandedMode', title: '🤚 One-Handed Mode', description: 'Optimized for single-hand use', type: 'toggle', value: settings.accessibility?.oneHandedMode },
+          
+          // Cognitive Support
+          { path: 'accessibility.simplifiedUI', title: '🎪 Simplified UI', description: 'Essential features only', type: 'toggle', value: settings.accessibility?.simplifiedUI },
+          { path: 'accessibility.plainLanguage', title: '💬 Plain Language', description: 'Simpler explanations', type: 'toggle', value: settings.accessibility?.plainLanguage },
+          { path: 'accessibility.extraConfirmations', title: '✅ Extra Confirmations', description: 'Confirm important actions', type: 'toggle', value: settings.accessibility?.extraConfirmations },
+          { path: 'accessibility.undoBuffer', title: '↩️ Undo Actions', description: 'Ability to undo recent changes', type: 'toggle', value: settings.accessibility?.undoBuffer },
+          
+          // Safety & Warnings
+          { path: 'accessibility.photosensitiveMode', title: '⚡ Photosensitive Protection', description: 'Reduce flashing & strobing', type: 'toggle', value: settings.accessibility?.photosensitiveMode },
+          { path: 'accessibility.autoplayControl', title: '▶️ Prevent Autoplay', description: 'Stop auto-playing media', type: 'toggle', value: settings.accessibility?.autoplayControl },
+          { path: 'accessibility.panicButton', title: '🚨 Panic Button (ESC)', description: 'Quick switch to innocent site', type: 'toggle', value: settings.accessibility?.panicButton },
+          { path: 'accessibility.panicSite', title: '🎯 Panic Redirect', description: 'Site to open when ESC pressed', type: 'dropdown', value: settings.accessibility?.panicSite || 'classroom', options: [
+            { value: 'classroom', label: '📚 Google Classroom' },
+            { value: 'ixl', label: '📊 IXL Learning' },
+            { value: 'canva', label: '🎨 Canva' },
+            { value: 'docs', label: '📝 Google Docs' },
+            { value: 'drive', label: '💾 Google Drive' },
+            { value: 'gmail', label: '📧 Gmail' },
+            { value: 'newtab', label: '🌐 New Tab (Google)' },
+            { value: 'blank', label: '⚪ Blank Page' }
+          ]},
+          { 
+            path: 'accessibility.panicReturnTimeout',
+            title: '⏱️ Return Link Expires',
+            description: 'Auto-clear local return data after inactivity (applies to panic return + general leave)',
+            type: 'slider',
+            value: settings.accessibility?.panicReturnTimeout ?? 60,
+            min: 0,
+            max: 485,
+            step: 5,
+            formatValue: (val) => {
+              if (val <= 0 || val >= 485) return 'Data erased disabled';
+              const hours = Math.floor(val / 60);
+              const minutes = val % 60;
+              if (hours >= 1) return `${hours}:${minutes.toString().padStart(2, '0')}`;
+              return `${val} min`;
+            }
+          },
+          { 
+            path: 'accessibility.fakeTabName',
+            title: '📑 Tab Name Disguise',
+            description: 'Tab name shown when you switch away (makes it look like you\'re studying)',
+            type: 'dropdown',
+            value: settings.accessibility?.fakeTabName ?? 'IXL | Math, Language Arts, Science, Social Studies, and Spanish',
+            options: [
+              { value: 'Google Classroom', label: '📚 Google Classroom' },
+              { value: 'IXL | Math, Language Arts, Science, Social Studies, and Spanish', label: '📊 IXL (Full Title)' },
+              { value: 'IXL - Math Practice', label: '🔢 IXL - Math Practice' },
+              { value: 'Google Docs', label: '📄 Google Docs' },
+              { value: 'Google Drive', label: '💾 Google Drive' },
+              { value: 'Canvas', label: '🎨 Canvas' },
+              { value: 'Quizlet', label: '📇 Quizlet' },
+              { value: 'Assignments - Google Classroom', label: '✏️ Assignments' },
+              { value: 'Untitled document - Google Docs', label: '📝 Untitled Doc' },
+              { value: 'My Drive - Google Drive', label: '🗂️ My Drive' }
+            ]
+          },
+          
+          // General
+          { path: 'accessibility.focusIndicators', title: '🔍 Enhanced Focus', description: 'Stronger keyboard focus outlines', type: 'toggle', value: settings.accessibility?.focusIndicators },
+          { path: 'accessibility.reducedTransparency', title: '🪟 Reduce Transparency', description: 'Solid backgrounds for clarity', type: 'toggle', value: settings.accessibility?.reducedTransparency },
+          { path: 'accessibility.screenReaderOptimized', title: '♿ Screen Reader Mode', description: 'Optimize for assistive tech', type: 'toggle', value: settings.accessibility?.screenReaderOptimized }
         ]
       },
       {
@@ -538,6 +807,29 @@ export default function Settings() {
         ]
       },
       {
+        id: 'schedule',
+        title: 'Class Schedule',
+        icon: Clock,
+        keywords: ['schedule', 'class', 'period', 'bell', 'time', 'reminder'],
+        controls: [
+          { path: 'schedule.enabled', title: '📅 Enable Schedule Tracking', description: 'Track your class periods and get notifications', type: 'toggle', value: settings.schedule?.enabled ?? false },
+          { path: 'schedule.showInTopBar', title: '📊 Show in Top Bar', description: 'Display current class and time remaining', type: 'toggle', value: settings.schedule?.showInTopBar ?? true },
+          { path: 'schedule.notifyBeforeEnd', title: '⏰ Notify Before Class Ends', description: 'Minutes before class ends to remind you to pack up', type: 'slider', value: settings.schedule?.notifyBeforeEnd ?? 5, min: 1, max: 15, suffix: ' min' }
+        ],
+        customUI: 'schedule'
+      },
+      {
+        id: 'stealth',
+        title: 'Stealth & Cover',
+        icon: Eye,
+        keywords: ['stealth', 'cover', 'boss', 'idle', 'decoy', 'hide'],
+        controls: [
+          { path: 'stealth.idleDecoyEnabled', title: '🕵️ Idle Decoy Mode', description: 'Show fake homework screen after inactivity', type: 'toggle', value: settings.stealth?.idleDecoyEnabled ?? false },
+          { path: 'stealth.idleDecoyTimeout', title: '⏱️ Idle Timeout', description: 'Minutes of inactivity before decoy appears', type: 'slider', value: settings.stealth?.idleDecoyTimeout ?? 3, min: 1, max: 10, suffix: ' min' },
+          { path: 'stealth.bossKeyEnabled', title: '⚡ Boss Key', description: 'Quick-cover hotkey (backtick key)', type: 'toggle', value: settings.stealth?.bossKeyEnabled ?? true }
+        ]
+      },
+      {
         id: 'browser',
         title: 'Browser Settings',
         icon: Globe,
@@ -561,10 +853,9 @@ export default function Settings() {
         id: 'widgets',
         title: 'Widgets',
         icon: Boxes,
-        keywords: ['widget', 'spotify', 'youtube', 'tiktok', 'sidebar'],
+        keywords: ['widget', 'spotify', 'youtube', 'tiktok'],
         controls: [
-          { path: 'widgets.enabled', title: 'Enable Widgets', description: 'Show sidebar widgets', type: 'toggle', value: settings.widgets.enabled },
-          { path: 'widgets.dockInSidebar', title: 'Dock in Sidebar', description: 'Show widgets in Opera-style sidebar', type: 'toggle', value: settings.widgets.dockInSidebar },
+          { path: 'widgets.enabled', title: 'Enable Widgets', description: 'Show draggable widgets on screen', type: 'toggle', value: settings.widgets.enabled },
           { path: 'widgets.spotify', title: 'Spotify Widget', description: 'Music player widget', type: 'toggle', value: settings.widgets.spotify },
           { path: 'widgets.youtube', title: 'YouTube Widget', description: 'Video feed widget', type: 'toggle', value: settings.widgets.youtube },
           { path: 'widgets.tiktok', title: 'TikTok Widget', description: 'Short video widget', type: 'toggle', value: settings.widgets.tiktok },
@@ -586,6 +877,21 @@ export default function Settings() {
             { value: 'professional', label: '💼 Professional - Direct and efficient' },
             { value: 'mentor', label: '🎓 Mentor - Educational & detailed' },
             { value: 'chill', label: '😎 Chill - Relaxed and friendly' }
+          ]},
+          { path: 'aiTools.apiProvider', title: 'AI Provider', description: 'Choose AI service (requires API key)', type: 'dropdown', value: settings.aiTools?.apiProvider || 'none', options: [
+            { value: 'none', label: '❌ None - Template responses only' },
+            { value: 'openai', label: '🤖 OpenAI (GPT-3.5/GPT-4)' },
+            { value: 'anthropic', label: '🧠 Anthropic (Claude)' },
+            { value: 'google', label: '📊 Google (Gemini)' }
+          ]},
+          { path: 'aiTools.apiKey', title: 'API Key', description: settings.aiTools?.apiProvider === 'openai' ? 'Get from platform.openai.com/api-keys' : settings.aiTools?.apiProvider === 'anthropic' ? 'Get from console.anthropic.com' : settings.aiTools?.apiProvider === 'google' ? 'Get from makersuite.google.com' : 'Your API key (stored locally)', type: 'password', value: settings.aiTools?.apiKey || '', placeholder: 'sk-...' },
+          { path: 'aiTools.model', title: 'Model', description: 'AI model to use', type: 'dropdown', value: settings.aiTools?.model || 'gpt-3.5-turbo', options: [
+            { value: 'gpt-3.5-turbo', label: 'GPT-3.5 Turbo (Fast & Cheap)' },
+            { value: 'gpt-4', label: 'GPT-4 (Smarter)' },
+            { value: 'gpt-4-turbo', label: 'GPT-4 Turbo (Best)' },
+            { value: 'claude-3-sonnet', label: 'Claude 3 Sonnet' },
+            { value: 'claude-3-opus', label: 'Claude 3 Opus' },
+            { value: 'gemini-pro', label: 'Gemini Pro' }
           ]}
         ]
       },
@@ -904,7 +1210,119 @@ export default function Settings() {
                 onToggle={() => toggleSection(section.id)}
                 highlighted={searchQuery.trim() && filteredSections.includes(section)}
               >
-                {section.custom ? section.custom : (
+                {section.custom ? section.custom : section.customUI === 'schedule' ? (
+                  <div className="space-y-3">
+                    {section.controls?.map((control) => (
+                      <SettingControl
+                        key={control.path}
+                        {...control}
+                        onChange={(value) => updateSetting(control.path, value)}
+                      />
+                    ))}
+                    
+                    {/* Custom Schedule Editor */}
+                    {settings.schedule?.enabled && (
+                      <div className="mt-6 space-y-4">
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-white font-medium">Class Periods</h4>
+                          <button
+                            onClick={() => {
+                              const newPeriod = {
+                                id: Date.now(),
+                                name: 'New Class',
+                                startTime: '08:00',
+                                endTime: '09:00',
+                                enabled: true
+                              };
+                              const newPeriods = [...(settings.schedule?.periods || []), newPeriod];
+                              updateSetting('schedule.periods', newPeriods);
+                            }}
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 transition-colors"
+                          >
+                            <Plus className="w-4 h-4" />
+                            Add Period
+                          </button>
+                        </div>
+
+                        {(settings.schedule?.periods || []).map((period, idx) => (
+                          <div key={period.id} className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-3">
+                            <div className="flex items-center justify-between">
+                              <input
+                                type="text"
+                                value={period.name}
+                                onChange={(e) => {
+                                  const newPeriods = [...settings.schedule.periods];
+                                  newPeriods[idx].name = e.target.value;
+                                  updateSetting('schedule.periods', newPeriods);
+                                }}
+                                className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-cyan-500/50 transition-colors flex-1 mr-2"
+                                placeholder="Class name"
+                              />
+                              <button
+                                onClick={() => {
+                                  const newPeriods = settings.schedule.periods.filter((_, i) => i !== idx);
+                                  updateSetting('schedule.periods', newPeriods);
+                                }}
+                                className="p-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-400 transition-colors"
+                              >
+                                <TrashIcon className="w-4 h-4" />
+                              </button>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <label className="text-white/60 text-sm mb-1 block">Start Time</label>
+                                <input
+                                  type="time"
+                                  value={period.startTime}
+                                  onChange={(e) => {
+                                    const newPeriods = [...settings.schedule.periods];
+                                    newPeriods[idx].startTime = e.target.value;
+                                    updateSetting('schedule.periods', newPeriods);
+                                  }}
+                                  className="w-full px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-cyan-500/50 transition-colors"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-white/60 text-sm mb-1 block">End Time</label>
+                                <input
+                                  type="time"
+                                  value={period.endTime}
+                                  onChange={(e) => {
+                                    const newPeriods = [...settings.schedule.periods];
+                                    newPeriods[idx].endTime = e.target.value;
+                                    updateSetting('schedule.periods', newPeriods);
+                                  }}
+                                  className="w-full px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-cyan-500/50 transition-colors"
+                                />
+                              </div>
+                            </div>
+
+                            <label className="flex items-center gap-2 text-white/60 text-sm cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={period.enabled}
+                                onChange={(e) => {
+                                  const newPeriods = [...settings.schedule.periods];
+                                  newPeriods[idx].enabled = e.target.checked;
+                                  updateSetting('schedule.periods', newPeriods);
+                                }}
+                                className="rounded border-white/20 bg-white/5 text-cyan-500 focus:ring-cyan-500"
+                              />
+                              Enabled
+                            </label>
+                          </div>
+                        ))}
+
+                        {(settings.schedule?.periods || []).length === 0 && (
+                          <div className="text-center py-8 text-white/40">
+                            No class periods added yet. Click "Add Period" to get started.
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ) : (
                   <div className="space-y-3">
                     {section.controls?.map((control) => (
                       <SettingControl

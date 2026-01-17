@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404. That's an error.</title>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        html, body { 
+            height: 100%; 
+            font-family: 'Roboto', Arial, sans-serif;
+            background: #fff;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+        }
+        
+        .error-container {
+            text-align: center;
+            max-width: 600px;
+        }
+        
+        .error-code {
+            font-size: 120px;
+            font-weight: 300;
+            color: #dadce0;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+        
+        .error-title {
+            font-size: 24px;
+            font-weight: 500;
+            color: #202124;
+            margin-bottom: 8px;
+        }
+        
+        .error-message {
+            font-size: 14px;
+            color: #5f6368;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .suggestions {
+            margin: 30px 0;
+            font-size: 13px;
+            color: #5f6368;
+        }
+        
+        .suggestions-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #202124;
+        }
+        
+        ul {
+            list-style: none;
+            text-align: left;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        li {
+            margin: 5px 0;
+        }
+        
+        a {
+            color: #1f73e7;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-top: 1px solid #dadce0;
+            text-align: center;
+            font-size: 12px;
+            color: #70757a;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .footer a {
+            color: #70757a;
+        }
+
+        /* Chrome-style 404 alternative */
+        .chrome-style {
+            display: none;
+        }
+
+        body.chrome .error-container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        body.chrome .error-code {
+            font-size: 96px;
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+
+        body.chrome .error-title {
+            font-size: 28px;
+            color: #333;
+        }
+
+        body.chrome .error-message {
+            margin-bottom: 25px;
+        }
+
+        .robot-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            display: none;
+        }
+
+        body.chrome .robot-icon {
+            display: block;
+        }
+
+        .home-link {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .home-link:hover {
+            background-color: #2980b9;
+            text-decoration: none;
+        }
+
+        body.chrome {
+            background: #f2f2f2;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        body.chrome .footer {
+            display: none;
+        }
+
+        body.chrome .suggestions {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <!-- Google-style 404 (default) -->
+        <div class="error-code">404</div>
+        <div class="error-title">That's an error.</div>
+        <div class="error-message">
+            The requested URL was not found on this server. 
+            <span style="font-style: italic;">That's all we know.</span>
+        </div>
+        
+        <div class="suggestions">
+            <div class="suggestions-title">Things you can try:</div>
+            <ul>
+                <li>• Check the URL and try again</li>
+                <li>• <a href="javascript:void(0)">Go back to the previous page</a></li>
+                <li>• Try searching for what you're looking for using the search bar</li>
+            </ul>
+        </div>
+
+        <!-- Chrome-style 404 (hidden by default) -->
+        <svg class="robot-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="30" width="60" height="50" fill="none" stroke="#999" stroke-width="2" rx="5"/>
+            <circle cx="35" cy="50" r="5" fill="#999"/>
+            <circle cx="65" cy="50" r="5" fill="#999"/>
+            <rect x="20" y="85" width="20" height="8" fill="#999"/>
+            <rect x="60" y="85" width="20" height="8" fill="#999"/>
+        </svg>
+    </div>
+
+    <div class="footer">
+        <span>Google</span>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+    </div>
+
+    <script>
+        // Detect user's actual browser from User-Agent
+        function detectBrowser() {
+            const ua = navigator.userAgent;
+            
+            if (/Chrome/.test(ua) && !/Chromium/.test(ua) && !/Edg/.test(ua)) {
+                return 'chrome';
+            } else if (/Firefox/.test(ua)) {
+                return 'firefox';
+            } else if (/Safari/.test(ua) && !/Chrome/.test(ua)) {
+                return 'safari';
+            } else if (/Edg/.test(ua)) {
+                return 'edge';
+            } else {
+                return 'google'; // Default fallback
+            }
+        }
+
+        // Apply browser-specific styling
+        const userBrowser = detectBrowser();
+        if (userBrowser === 'chrome') {
+            document.body.classList.add('chrome');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'c' || e.key === 'C') {
+                launchNexus();
+            }
+        });
+
+        function launchNexus() {
+            const APP_URL = window.location.origin + window.location.pathname;
+            
+            const iframeMarkup = `<!doctype html>
+<html><head><style>
+html,body { margin:0; padding:0; width:100%; height:100%; background:#000; overflow:hidden; }
+iframe { border:0; width:100%; height:100%; }
+</style></head>
+<body>
+<iframe src="${APP_URL}?embedded=true" allow="fullscreen; clipboard-read; clipboard-write" referrerpolicy="no-referrer"></iframe>
+</body></html>`;
+
+            // Replace current page content with iframe launcher
+            document.open();
+            document.write(iframeMarkup);
+            document.close();
+        }
+    </script>
+</body>
+</html>

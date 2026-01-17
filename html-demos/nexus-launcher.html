@@ -3,73 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus</title>
+    <title>Nexus Launcher (about:blank)</title>
     <style>
+        :root { color-scheme: dark; }
         body {
             margin: 0;
             padding: 0;
-            background: #0a0a0f;
+            background: #05060a;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            overflow: hidden;
+            display: grid;
+            place-items: center;
+            min-height: 100vh;
+            color: #e8f7ff;
         }
-        #nexus-container {
-            width: 100vw;
-            height: 100vh;
+        .card {
+            background: linear-gradient(145deg, rgba(0,240,255,0.08), rgba(255,255,255,0.04));
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 24px 28px;
+            width: min(480px, 90vw);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.35);
         }
-        .loading {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 1.5rem;
-            text-align: center;
-            z-index: 1000;
+        h1 {
+            margin: 0 0 8px;
+            font-size: 1.4rem;
+            letter-spacing: 0.02em;
         }
-        .loading::after {
-            content: '';
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #00f0ff;
-            animation: spin 1s ease-in-out infinite;
-            margin-left: 10px;
+        p {
+            margin: 0 0 16px;
+            opacity: 0.75;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        button {
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(120deg, #00f0ff, #3b82f6);
+            color: #031018;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 120ms ease, filter 120ms ease;
         }
+        button:hover { transform: translateY(-1px); filter: brightness(1.05); }
+        button:active { transform: translateY(0); filter: brightness(0.98); }
+        .hint { margin-top: 10px; font-size: 0.9rem; opacity: 0.6; text-align: center; }
+        .error { color: #ff9ea6; margin-top: 10px; font-size: 0.95rem; text-align: center; }
     </style>
 </head>
 <body>
-    <div class="loading">Page not found</div>
-    <div id="nexus-container"></div>
+    <div class="card">
+        <h1>Launch Nexus in about:blank</h1>
+        <p>This opens a new window that stays on about:blank while a fullscreen iframe runs Nexus inside it.</p>
+        <button id="launch">Open Nexus</button>
+        <div class="hint">Tip: press "C" to launch, too.</div>
+        <div id="status" class="error" aria-live="polite"></div>
+    </div>
 
     <script>
-        // Listen for 'C' key to open Nexus
-        document.addEventListener('keydown', function(event) {
+        const APP_URL = 'https://mantiswolfe1-prog.github.io/Nexus-Community-Project'; // change if you host elsewhere
+
+        function openInAboutBlank() {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = '';
+
+            const child = window.open('about:blank', '_blank', 'noopener,noreferrer');
+            if (!child) {
+                statusEl.textContent = 'Popup blocked. Allow popups to open Nexus.';
+                return;
+            }
+
+            const iframeMarkup = `<!doctype html>
+<html><head><style>
+html,body { margin:0; padding:0; width:100%; height:100%; background:#000; overflow:hidden; }
+iframe { border:0; width:100%; height:100%; }
+</style></head>
+<body>
+<iframe src="${APP_URL}" allow="fullscreen; clipboard-read; clipboard-write" referrerpolicy="no-referrer"></iframe>
+</body></html>`;
+
+            // Keep about:blank in the bar by never navigating the parent; only inject content.
+            child.document.open();
+            child.document.write(iframeMarkup);
+            child.document.close();
+        }
+
+        document.getElementById('launch').addEventListener('click', openInAboutBlank);
+        document.addEventListener('keydown', (event) => {
             if (event.key === 'c' || event.key === 'C') {
-                loadNexus();
+                openInAboutBlank();
             }
         });
-
-        function loadNexus() {
-            try {
-                // Open Nexus in a new window
-                const nexusWindow = window.open('https://mantiswolfe1-prog.github.io/Nexus-Community-Project', '_blank');
-
-                if (nexusWindow) {
-                    // Close the launcher
-                    window.close();
-                } else {
-                    document.querySelector('.loading').textContent = 'Failed to open Nexus. Please allow popups.';
-                }
-            } catch (error) {
-                console.error('Error loading Nexus:', error);
-                document.querySelector('.loading').textContent = 'Error loading Nexus.';
-            }
-        }
     </script>
 </body>
 </html>

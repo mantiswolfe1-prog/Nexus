@@ -10,7 +10,6 @@ export default function WidgetsOverlay() {
 
   const enabledWidgets = useMemo(() => {
     if (!settings.widgets?.enabled) return [];
-    if (settings.widgets?.dockInSidebar) return []; // Sidebar will render widgets
     const list = [];
     if (settings.widgets.spotify && !hidden.spotify) list.push('spotify');
     if (settings.widgets.youtube && !hidden.youtube) list.push('youtube');

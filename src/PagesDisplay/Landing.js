@@ -4,13 +4,72 @@ import { Shield, Download, ArrowRight, MessageCircle, Bug } from 'lucide-react';
 import NeonButton from '../Components/UI/NeonButton.js';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils.js';
+import useSettings from '../hooks/useSettings.js';
 
 export default function Landing() {
   const [loading, setLoading] = useState(false);
+  const [showReturnNotice, setShowReturnNotice] = useState(false);
   const navigate = useNavigate();
+  const { settings } = useSettings();
+
+  React.useEffect(() => {
+    // Check if user used panic button and wants to return
+    const panicDataStr = localStorage.getItem('nexus-panic-return');
+    if (!panicDataStr) return;
+
+    try {
+      // Support both legacy string and new JSON format
+      const parsed = JSON.parse(panicDataStr);
+      const panicData = typeof parsed === 'string' ? { url: parsed, timestamp: null } : parsed;
+
+      if (panicData.url && panicData.url.includes(window.location.origin)) {
+        const timeoutMinutes = settings.accessibility?.panicReturnTimeout ?? 60;
+        const disabled = timeoutMinutes <= 0 || timeoutMinutes >= 485;
+
+        if (disabled) {
+          setShowReturnNotice(true);
+          return;
+        }
+
+        const timeoutMs = timeoutMinutes * 60 * 1000;
+        const elapsed = Date.now() - (panicData.timestamp || 0);
+
+        if (elapsed < timeoutMs) {
+          // Not expired yet, show return button
+          setShowReturnNotice(true);
+        } else {
+          // Expired, clear it
+          localStorage.removeItem('nexus-panic-return');
+        }
+      } else {
+        // Invalid data, clear it
+        localStorage.removeItem('nexus-panic-return');
+      }
+    } catch (err) {
+      // Corrupted data, clear it
+      localStorage.removeItem('nexus-panic-return');
+    }
+  }, [settings.accessibility?.panicReturnTimeout]);
+
+  const handleQuickReturn = () => {
+    const panicDataStr = localStorage.getItem('nexus-panic-return');
+    if (panicDataStr) {
+      try {
+        const panicData = JSON.parse(panicDataStr);
+        if (panicData.url) {
+          localStorage.removeItem('nexus-panic-return');
+          window.location.href = panicData.url;
+        }
+      } catch (err) {
+        localStorage.removeItem('nexus-panic-return');
+      }
+    }
+  };
 
   const handleContinue = async () => {
     setLoading(true);
+    // Clear panic return URL
+    localStorage.removeItem('nexus-panic-return');
     // Store access verified and navigate to consent
     sessionStorage.setItem('nexus_access_verified', 'true');
     navigate(createPageUrl('Consent'));
@@ -60,13 +119,36 @@ export default function Landing() {
               </p>
             </div>
 
+            {showReturnNotice && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 rounded-lg bg-cyan-500/10 border border-cyan-500/30"
+              >
+                <p className="text-cyan-400 text-sm text-center mb-3">
+                  🔄 Quick Return Available
+                </p>
+                <NeonButton
+                  onClick={handleQuickReturn}
+                  variant="primary"
+                  className="w-full"
+                >
+                  Return to Previous Page
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </NeonButton>
+                <p className="text-white/40 text-xs text-center mt-2">
+                  Coast is clear? Click to go back where you left off
+                </p>
+              </motion.div>
+            )}
+
             <NeonButton
               onClick={handleContinue}
               variant="primary"
               className="w-full"
               disabled={loading}
             >
-              {loading ? 'Loading...' : 'Enter Nexus'}
+              {loading ? 'Loading...' : showReturnNotice ? 'Start Fresh' : 'Enter Nexus'}
               <ArrowRight className="w-4 h-4 ml-2" />
             </NeonButton>
           </div>
